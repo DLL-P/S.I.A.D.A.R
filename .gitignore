@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+data/raw/
+data/processed/
+*.pcap
+*.pcapng
+models/*.joblib
+models/*.pkl
+.pytest_cache/
+*.egg-info/
+.ipynb_checkpoints/
+.claude/
+outputs/
+

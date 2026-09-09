@@ -1,0 +1,758 @@
+<title>Mapa Mental SIADAR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --paper: #eef1f3;
+    --paper-grid: #e1e7eb;
+    --surface: #ffffff;
+    --surface-border: #d7dee3;
+    --ink: #182430;
+    --ink-soft: #52626f;
+    --ink-faint: #8695a1;
+    --trunk: #24303c;
+
+    --m1: #1f8a83; --m1-soft: #d7efec; --m1-ink: #0f4b47;
+    --m2: #bd7a1e; --m2-soft: #f6e8ce; --m2-ink: #6b4610;
+    --m3: #b23a48; --m3-soft: #f5dce0; --m3-ink: #6e222c;
+    --m4: #6a4c9c; --m4-soft: #e6ddf3; --m4-ink: #3c2a5b;
+    --m5: #3a5a8c; --m5-soft: #dde6f2; --m5-ink: #223752;
+    --fix: #2f7d52; --fix-soft: #d9ede1; --fix-ink: #164a30;
+
+    --code-bg: #182430;
+    --code-fg: #e9edf1;
+    --code-accent: #7fd8c8;
+
+    --font-display: "Fraunces", ui-serif, Georgia, serif;
+    --font-body: "Public Sans", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #10151b;
+      --paper-grid: #1a222a;
+      --surface: #171f27;
+      --surface-border: #2b3742;
+      --ink: #e8edf1;
+      --ink-soft: #aab8c3;
+      --ink-faint: #728290;
+      --trunk: #cdd7df;
+
+      --m1: #4bc9bd; --m1-soft: #123330; --m1-ink: #9fe9df;
+      --m2: #e3ac52; --m2-soft: #362610; --m2-ink: #f1cb8e;
+      --m3: #e17c88; --m3-soft: #3a1e22; --m3-ink: #f2b6bd;
+      --m4: #ab8fdb; --m4-soft: #291f3d; --m4-ink: #d6c6f2;
+      --m5: #85a9dd; --m5-soft: #1c2939; --m5-ink: #bdd2ef;
+      --fix: #59b381; --fix-soft: #142a1e; --fix-ink: #a8e2c1;
+
+      --code-bg: #0c1116;
+      --code-fg: #e6edf3;
+      --code-accent: #7fd8c8;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #10151b;
+    --paper-grid: #1a222a;
+    --surface: #171f27;
+    --surface-border: #2b3742;
+    --ink: #e8edf1;
+    --ink-soft: #aab8c3;
+    --ink-faint: #728290;
+    --trunk: #cdd7df;
+
+    --m1: #4bc9bd; --m1-soft: #123330; --m1-ink: #9fe9df;
+    --m2: #e3ac52; --m2-soft: #362610; --m2-ink: #f1cb8e;
+    --m3: #e17c88; --m3-soft: #3a1e22; --m3-ink: #f2b6bd;
+    --m4: #ab8fdb; --m4-soft: #291f3d; --m4-ink: #d6c6f2;
+    --m5: #85a9dd; --m5-soft: #1c2939; --m5-ink: #bdd2ef;
+    --fix: #59b381; --fix-soft: #142a1e; --fix-ink: #a8e2c1;
+
+    --code-bg: #0c1116;
+    --code-fg: #e6edf3;
+    --code-accent: #7fd8c8;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background:
+      linear-gradient(var(--paper-grid) 1px, transparent 1px) 0 0/100% 34px,
+      linear-gradient(90deg, var(--paper-grid) 1px, transparent 1px) 0 0/34px 100%,
+      var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; color: var(--ink); }
+  p { margin: 0; }
+  code, .mono { font-family: var(--font-mono); }
+  figure { margin: 0; }
+  svg text { font-family: var(--font-body); }
+
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px 120px; }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    padding: 64px 0 12px;
+    display: grid;
+    gap: 10px;
+    text-align: center;
+  }
+  .kicker {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .hero h1 { font-size: clamp(34px, 5.5vw, 56px); font-weight: 700; }
+  .hero .sub {
+    max-width: 620px;
+    margin: 4px auto 0;
+    color: var(--ink-soft);
+    font-size: 17px;
+  }
+
+  .hero-diagram { margin: 36px auto 8px; max-width: 760px; }
+  .hero-diagram svg { width: 100%; height: auto; display: block; }
+  figcaption {
+    font-size: 13.5px;
+    color: var(--ink-faint);
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  .legend {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 10px;
+    max-width: 900px;
+    margin: 28px auto 0;
+  }
+  .legend-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    text-align: left;
+  }
+  .dot { width: 12px; height: 12px; border-radius: 50%; flex: none; margin-top: 4px; }
+  .legend-item .t { font-weight: 700; font-size: 14px; }
+  .legend-item .d { font-size: 13px; color: var(--ink-soft); }
+  .status { font-family: var(--font-mono); font-size: 11.5px; font-weight: 600; letter-spacing: .02em; }
+  .status.ok { color: var(--fix); }
+  .status.wait { color: var(--ink-faint); }
+
+  /* ---------- METHOD STRIP ---------- */
+  .method {
+    margin: 56px 0 0;
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: 14px;
+    padding: 26px 28px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+  .method h2 { font-size: 20px; grid-column: 1 / -1; }
+  .method-item { display: grid; gap: 4px; }
+  .method-item .k { font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--trunk); letter-spacing: .04em; text-transform: uppercase; }
+  .method-item p { font-size: 14px; color: var(--ink-soft); }
+
+  /* ---------- CHAPTERS ---------- */
+  .chapter { margin-top: 84px; }
+  .chapter-head {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 18px;
+    align-items: start;
+    margin-bottom: 28px;
+  }
+  .chapter-num {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 42px;
+    line-height: 1;
+    color: var(--rail, var(--trunk));
+    opacity: .5;
+  }
+  .chapter-head h2 { font-size: clamp(24px, 3.4vw, 32px); }
+  .chapter-head .lede { color: var(--ink-soft); font-size: 15px; max-width: 62ch; margin-top: 6px; }
+  .chapter-body {
+    border-left: 3px solid var(--rail, var(--surface-border));
+    padding-left: 28px;
+  }
+  .chapter[data-tone="m1"] { --rail: var(--m1); }
+  .chapter[data-tone="m2"] { --rail: var(--m2); }
+  .chapter[data-tone="m3"] { --rail: var(--m3); }
+  .chapter[data-tone="fix"] { --rail: var(--fix); }
+  .chapter[data-tone="trunk"] { --rail: var(--trunk); }
+
+  /* ---------- DIAGRAM CARD ---------- */
+  .diagram-card {
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: 14px;
+    padding: 22px;
+    overflow-x: auto;
+  }
+  .diagram-card svg { display: block; margin: 0 auto; min-width: 640px; }
+
+  /* ---------- STEP CARDS ---------- */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 8px;
+  }
+  .step {
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: 12px;
+    padding: 18px;
+    display: grid;
+    gap: 10px;
+    position: relative;
+  }
+  .step .num {
+    position: absolute; top: 14px; right: 16px;
+    font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint);
+  }
+  .step-icon {
+    width: 34px; height: 34px;
+    border-radius: 9px;
+    display: grid; place-items: center;
+    background: var(--tone-soft); color: var(--tone);
+  }
+  .step-icon svg { width: 19px; height: 19px; }
+  .step[data-tone="m1"] { --tone: var(--m1); --tone-soft: var(--m1-soft); }
+  .step[data-tone="m2"] { --tone: var(--m2); --tone-soft: var(--m2-soft); }
+  .step[data-tone="fix"] { --tone: var(--fix); --tone-soft: var(--fix-soft); }
+  .step[data-tone="trunk"] { --tone: var(--trunk); --tone-soft: var(--surface-border); }
+  .step h3 { font-size: 15.5px; font-family: var(--font-body); font-weight: 700; }
+  .step p { font-size: 13.5px; color: var(--ink-soft); }
+  .step pre {
+    margin: 0;
+    background: var(--code-bg);
+    color: var(--code-fg);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 12.5px;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .step pre .flag { color: var(--code-accent); }
+
+  /* ---------- CHEAT SHEET ---------- */
+  .cheat-group { margin-bottom: 22px; }
+  .cheat-group:last-child { margin-bottom: 0; }
+  .cheat-tab {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+    letter-spacing: .04em; text-transform: uppercase;
+    color: var(--tone-ink); background: var(--tone-soft);
+    border-radius: 999px; padding: 5px 12px; margin-bottom: 10px;
+  }
+  .cheat-group[data-tone="m1"] { --tone-soft: var(--m1-soft); --tone-ink: var(--m1-ink); }
+  .cheat-group[data-tone="m2"] { --tone-soft: var(--m2-soft); --tone-ink: var(--m2-ink); }
+  .cheat-group[data-tone="fix"] { --tone-soft: var(--fix-soft); --tone-ink: var(--fix-ink); }
+  .cheat-row {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) auto;
+    gap: 14px;
+    align-items: center;
+    padding: 11px 0;
+    border-top: 1px solid var(--surface-border);
+  }
+  .cheat-row:first-of-type { border-top: none; }
+  .cheat-row code {
+    display: block;
+    background: var(--code-bg); color: var(--code-fg);
+    border-radius: 8px; padding: 9px 12px; font-size: 12.5px;
+    overflow-x: auto; white-space: pre;
+  }
+  .cheat-row .what { font-size: 13px; color: var(--ink-soft); white-space: nowrap; }
+
+  /* ---------- TREE FIX CARDS ---------- */
+  .fix-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-top: 24px;
+  }
+  .fix-card {
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .fix-card .sym { font-size: 12.5px; font-family: var(--font-mono); color: var(--m3-ink); background: var(--m3-soft); border-radius: 6px; padding: 3px 8px; display: inline-block; margin-bottom: 8px; }
+  .fix-card .sol { font-size: 13.5px; color: var(--ink-soft); margin-top: 6px; }
+  .fix-card .sol b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- GLOSSARY ---------- */
+  .glossary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 12px;
+  }
+  .gterm {
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .gterm .w { font-family: var(--font-mono); font-weight: 700; font-size: 13.5px; color: var(--trunk); }
+  .gterm p { font-size: 13px; color: var(--ink-soft); margin-top: 4px; }
+
+  footer {
+    margin-top: 90px;
+    padding-top: 24px;
+    border-top: 1px solid var(--surface-border);
+    color: var(--ink-faint);
+    font-size: 12.5px;
+    text-align: center;
+  }
+
+  @media (max-width: 640px) {
+    .chapter-head { grid-template-columns: 1fr; }
+    .chapter-num { font-size: 30px; }
+    .chapter-body { padding-left: 18px; }
+  }
+</style>
+
+<div class="wrap">
+
+  <!-- ============ HERO / MAPA MENTAL CENTRAL ============ -->
+  <section class="hero">
+    <div class="kicker">Guia visual · método dos mapas mentais</div>
+    <h1>Mapa Mental do SIADAR</h1>
+    <p class="sub">Sistema Inteligente de Análise, Detecção de Anomalias e Resposta em Redes Corporativas — um mapa, cinco ramos, uma palavra‑chave por ideia.</p>
+
+    <figure class="hero-diagram">
+      <svg viewBox="0 0 900 620" role="img" aria-label="Mapa mental do SIADAR: um núcleo central com cinco ramos coloridos, um por módulo. Módulo 1 (Captura) e Módulo 2 (Triagem) estão em traço sólido e ligados por uma seta 'flows.csv', indicando que já estão implementados e conectados. Módulos 3, 4 e 5 estão em traço tracejado, indicando que ainda são planejados.">
+        <defs>
+          <marker id="heroArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"></path>
+          </marker>
+        </defs>
+
+        <!-- ramos -->
+        <path d="M450,240 Q490,155 450,75" fill="none" stroke="var(--m1)" stroke-width="7" stroke-linecap="round"></path>
+        <path d="M516.6,288.4 Q610,235 673.5,237.4" fill="none" stroke="var(--m2)" stroke-width="7" stroke-linecap="round"></path>
+        <path d="M491.1,366.6 Q560,430 588.1,500.1" fill="none" stroke="var(--m3)" stroke-width="6" stroke-linecap="round" stroke-dasharray="2 10"></path>
+        <path d="M408.9,366.6 Q340,430 311.9,500.1" fill="none" stroke="var(--m4)" stroke-width="6" stroke-linecap="round" stroke-dasharray="2 10"></path>
+        <path d="M383.4,288.4 Q290,235 226.5,237.4" fill="none" stroke="var(--m5)" stroke-width="6" stroke-linecap="round" stroke-dasharray="2 10"></path>
+
+        <!-- conector real de dados entre M1 e M2 -->
+        <path d="M478,120 Q600,120 645,205" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#heroArrow)"></path>
+        <text x="562" y="108" text-anchor="middle" font-size="12" fill="var(--ink-soft)" class="mono">flows.csv</text>
+
+        <!-- nó central -->
+        <circle cx="450" cy="310" r="72" fill="var(--trunk)"></circle>
+        <text x="450" y="317" text-anchor="middle" font-size="24" font-weight="700" fill="var(--paper)" font-family="var(--font-display)">SIADAR</text>
+
+        <!-- Módulo 1 -->
+        <circle cx="450" cy="75" r="54" fill="var(--m1-soft)" stroke="var(--m1)" stroke-width="3"></circle>
+        <text x="450" y="66" text-anchor="middle" font-size="10.5" class="mono" fill="var(--m1-ink)">M1 · PRONTO</text>
+        <text x="450" y="86" text-anchor="middle" font-size="15" font-weight="700" fill="var(--m1-ink)">CAPTURA</text>
+
+        <!-- Módulo 2 -->
+        <circle cx="673.5" cy="237.4" r="54" fill="var(--m2-soft)" stroke="var(--m2)" stroke-width="3"></circle>
+        <text x="673.5" y="228.4" text-anchor="middle" font-size="10.5" class="mono" fill="var(--m2-ink)">M2 · PRONTO</text>
+        <text x="673.5" y="248.4" text-anchor="middle" font-size="15" font-weight="700" fill="var(--m2-ink)">TRIAGEM</text>
+
+        <!-- Módulo 3 -->
+        <circle cx="588.1" cy="500.1" r="54" fill="var(--m3-soft)" stroke="var(--m3)" stroke-width="2.5" stroke-dasharray="3 4"></circle>
+        <text x="588.1" y="491.1" text-anchor="middle" font-size="10.5" class="mono" fill="var(--m3-ink)">M3 · A FAZER</text>
+        <text x="588.1" y="511.1" text-anchor="middle" font-size="15" font-weight="700" fill="var(--m3-ink)">ANOMALIA</text>
+
+        <!-- Módulo 4 -->
+        <circle cx="311.9" cy="500.1" r="54" fill="var(--m4-soft)" stroke="var(--m4)" stroke-width="2.5" stroke-dasharray="3 4"></circle>
+        <text x="311.9" y="491.1" text-anchor="middle" font-size="10.5" class="mono" fill="var(--m4-ink)">M4 · A FAZER</text>
+        <text x="311.9" y="511.1" text-anchor="middle" font-size="15" font-weight="700" fill="var(--m4-ink)">PERFIL</text>
+
+        <!-- Módulo 5 -->
+        <circle cx="226.5" cy="237.4" r="54" fill="var(--m5-soft)" stroke="var(--m5)" stroke-width="2.5" stroke-dasharray="3 4"></circle>
+        <text x="226.5" y="228.4" text-anchor="middle" font-size="10.5" class="mono" fill="var(--m5-ink)">M5 · A FAZER</text>
+        <text x="226.5" y="248.4" text-anchor="middle" font-size="15" font-weight="700" fill="var(--m5-ink)">PREVISÃO</text>
+      </svg>
+      <figcaption>O mapa completo do SIADAR: cinco módulos como ramos. Os ramos sólidos (M1 e M2) já existem no código e conversam entre si — a seta pontilhada "flows.csv" é o dado real passando de um para o outro.</figcaption>
+    </figure>
+
+    <div class="legend">
+      <div class="legend-item"><span class="dot" style="background:var(--m1)"></span><div><div class="t">M1 · Captura</div><div class="d">Lê um <code class="mono">.pcap</code> e agrega pacotes em flows</div></div></div>
+      <div class="legend-item"><span class="dot" style="background:var(--m2)"></span><div><div class="t">M2 · Triagem</div><div class="d">Random Forest classifica o tipo de tráfego</div></div></div>
+      <div class="legend-item"><span class="dot" style="background:var(--m3)"></span><div><div class="t">M3 · Anomalia</div><div class="d"><span class="status wait">planejado</span> — Isolation Forest / Autoencoder</div></div></div>
+      <div class="legend-item"><span class="dot" style="background:var(--m4)"></span><div><div class="t">M4 · Perfil (UEBA)</div><div class="d"><span class="status wait">planejado</span> — baseline por usuário</div></div></div>
+      <div class="legend-item"><span class="dot" style="background:var(--m5)"></span><div><div class="t">M5 · Previsão</div><div class="d"><span class="status wait">planejado</span> — falhas e vulnerabilidades</div></div></div>
+    </div>
+  </section>
+
+  <!-- ============ MÉTODO ============ -->
+  <section class="method">
+    <h2>Como ler este mapa</h2>
+    <div class="method-item"><div class="k">Cor = módulo</div><p>Cada um dos cinco módulos tem uma cor fixa. Ela se repete em todo o guia — vendo a cor, você já sabe de qual parte do sistema se trata.</p></div>
+    <div class="method-item"><div class="k">Traço sólido = pronto</div><p>Contorno cheio e cor forte: já existe no código. Contorno tracejado e cor apagada: ainda é plano, não implementado.</p></div>
+    <div class="method-item"><div class="k">Palavra, não frase</div><p>Cada nó carrega uma única palavra‑chave (CAPTURA, TRIAGEM...). O parágrafo ao lado explica; o mapa só te ajuda a lembrar.</p></div>
+    <div class="method-item"><div class="k">Uma seta = um dado real</div><p>Setas pontilhadas cinza marcam um arquivo de verdade passando de um script para outro — não é decoração, é o que roda no terminal.</p></div>
+  </section>
+
+  <!-- ============ CAPÍTULO 1 — ARQUITETURA ============ -->
+  <section class="chapter" data-tone="trunk">
+    <div class="chapter-head">
+      <div class="chapter-num">1</div>
+      <div>
+        <h2>Como o sistema pensa</h2>
+        <p class="lede">Duas portas de entrada — um dataset público e uma captura ao vivo — convergem para o mesmo conjunto de 29 features. É essa peça em comum que permite treinar com dado público e aplicar em tráfego real.</p>
+      </div>
+    </div>
+    <div class="chapter-body">
+      <div class="diagram-card">
+        <figure>
+          <svg viewBox="0 0 1080 460" role="img" aria-label="Diagrama de duas pistas: no topo, o CSV do CICIDS2017 passa por load_cicids.py até o módulo schema.py com 29 features, depois por fit_transform e train.py até o arquivo rf_classifier.joblib. Embaixo, a captura pcap passa por pcap_to_flows.py até o mesmo schema.py, depois por predict.py que carrega o rf_classifier.joblib gerado no treino para produzir predictions.csv.">
+            <defs>
+              <marker id="pipeArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
+              </marker>
+            </defs>
+
+            <!-- linhas guia coluna -->
+            <text x="30" y="30" font-size="11" class="mono" fill="var(--ink-faint)">TREINO (uma vez)</text>
+            <text x="30" y="410" font-size="11" class="mono" fill="var(--ink-faint)">OPERAÇÃO (todo dia)</text>
+
+            <!-- A1 -->
+            <rect x="20" y="50" width="190" height="70" rx="10" fill="var(--m2-soft)" stroke="var(--m2)" stroke-width="2"></rect>
+            <text x="115" y="80" text-anchor="middle" font-size="13" font-weight="700" fill="var(--m2-ink)">CSV CICIDS2017</text>
+            <text x="115" y="98" text-anchor="middle" font-size="11" fill="var(--m2-ink)">data/raw/...</text>
+
+            <!-- B1 -->
+            <rect x="20" y="340" width="190" height="70" rx="10" fill="var(--m1-soft)" stroke="var(--m1)" stroke-width="2"></rect>
+            <text x="115" y="370" text-anchor="middle" font-size="13" font-weight="700" fill="var(--m1-ink)">CAPTURA .pcap</text>
+            <text x="115" y="388" text-anchor="middle" font-size="11" fill="var(--m1-ink)">tcpdump / Wireshark</text>
+
+            <!-- hub schema -->
+            <rect x="290" y="195" width="260" height="90" rx="12" fill="var(--surface)" stroke="var(--trunk)" stroke-width="2.5"></rect>
+            <text x="420" y="228" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">schema.py</text>
+            <text x="420" y="246" text-anchor="middle" font-size="11" fill="var(--ink-soft)">29 features padronizadas</text>
+            <text x="420" y="262" text-anchor="middle" font-size="10.5" class="mono" fill="var(--ink-faint)">CORE_FLOW_FEATURES</text>
+
+            <!-- A2 train -->
+            <rect x="670" y="50" width="220" height="70" rx="10" fill="var(--m2-soft)" stroke="var(--m2)" stroke-width="2"></rect>
+            <text x="780" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="var(--m2-ink)">train.py</text>
+            <text x="780" y="96" text-anchor="middle" font-size="11" fill="var(--m2-ink)">fit_transform + RandomForest</text>
+
+            <!-- A3 joblib -->
+            <rect x="930" y="50" width="130" height="70" rx="10" fill="var(--surface)" stroke="var(--surface-border)" stroke-width="2"></rect>
+            <text x="995" y="80" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink)">rf_classifier</text>
+            <text x="995" y="96" text-anchor="middle" font-size="11" class="mono" fill="var(--ink-soft)">.joblib</text>
+
+            <!-- B2 predict -->
+            <rect x="670" y="340" width="220" height="70" rx="10" fill="var(--m1-soft)" stroke="var(--m1)" stroke-width="2"></rect>
+            <text x="780" y="368" text-anchor="middle" font-size="13" font-weight="700" fill="var(--m1-ink)">predict.py</text>
+            <text x="780" y="386" text-anchor="middle" font-size="11" fill="var(--m1-ink)">transform() + modelo</text>
+
+            <!-- B3 predictions -->
+            <rect x="930" y="340" width="130" height="70" rx="10" fill="var(--surface)" stroke="var(--surface-border)" stroke-width="2"></rect>
+            <text x="995" y="370" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink)">predictions</text>
+            <text x="995" y="386" text-anchor="middle" font-size="11" class="mono" fill="var(--ink-soft)">.csv</text>
+
+            <!-- arrows -->
+            <g stroke="var(--m2)" fill="none" color="var(--m2)">
+              <path d="M210,95 Q260,110 300,195" marker-end="url(#pipeArrow)"></path>
+            </g>
+            <text x="230" y="150" font-size="10.5" class="mono" fill="var(--m2-ink)">load_cicids.py</text>
+
+            <g stroke="var(--m1)" fill="none" color="var(--m1)">
+              <path d="M210,375 Q260,320 300,285" marker-end="url(#pipeArrow)"></path>
+            </g>
+            <text x="230" y="330" font-size="10.5" class="mono" fill="var(--m1-ink)">pcap_to_flows.py</text>
+
+            <g stroke="var(--m2)" fill="none" color="var(--m2)">
+              <path d="M550,215 Q620,190 668,110" marker-end="url(#pipeArrow)"></path>
+            </g>
+            <text x="600" y="175" font-size="10.5" class="mono" fill="var(--m2-ink)">fit_transform()</text>
+
+            <g stroke="var(--m1)" fill="none" color="var(--m1)">
+              <path d="M550,265 Q620,300 668,360" marker-end="url(#pipeArrow)"></path>
+            </g>
+            <text x="600" y="320" font-size="10.5" class="mono" fill="var(--m1-ink)">transform()</text>
+
+            <g stroke="var(--m2)" fill="none" color="var(--m2)">
+              <line x1="890" y1="85" x2="928" y2="85" marker-end="url(#pipeArrow)"></line>
+            </g>
+            <g stroke="var(--m1)" fill="none" color="var(--m1)">
+              <line x1="890" y1="375" x2="928" y2="375" marker-end="url(#pipeArrow)"></line>
+            </g>
+
+            <!-- bridge joblib -> predict -->
+            <g stroke="var(--ink-soft)" fill="none" color="var(--ink-soft)">
+              <path d="M960,122 Q1010,230 800,338" stroke-dasharray="5 5" marker-end="url(#pipeArrow)"></path>
+            </g>
+            <text x="965" y="230" text-anchor="middle" font-size="10.5" class="mono" fill="var(--ink-soft)">carrega o .joblib</text>
+          </svg>
+          <figcaption>O modelo treinado (<code class="mono">rf_classifier.joblib</code>) é a ponte: nasce da coluna de treino (CSV público) e é consumido pela coluna de operação (captura ao vivo) — só funciona porque as duas colunas falam o mesmo "idioma" de 29 features.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CAPÍTULO 2 — INSTALAÇÃO ============ -->
+  <section class="chapter" data-tone="fix">
+    <div class="chapter-head">
+      <div class="chapter-num">2</div>
+      <div>
+        <h2>Primeira instalação</h2>
+        <p class="lede">Quatro comandos, uma vez só, dentro da pasta do projeto. Depois disso o ambiente fica pronto para todos os capítulos seguintes.</p>
+      </div>
+    </div>
+    <div class="chapter-body">
+      <div class="steps">
+        <div class="step" data-tone="fix">
+          <span class="num">passo 1</span>
+          <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M7 9l3 3-3 3M13 15h4"></path></svg></div>
+          <h3>Criar o ambiente</h3>
+          <p>Um Python isolado só para o SIADAR, separado do resto da máquina.</p>
+          <pre>python -m venv .venv</pre>
+        </div>
+        <div class="step" data-tone="fix">
+          <span class="num">passo 2</span>
+          <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></div>
+          <h3>Ativar o ambiente</h3>
+          <p>Repita isso toda vez que abrir um terminal novo para trabalhar no projeto.</p>
+          <pre>.venv\Scripts\activate</pre>
+        </div>
+        <div class="step" data-tone="fix">
+          <span class="num">passo 3</span>
+          <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"></path></svg></div>
+          <h3>Instalar as dependências</h3>
+          <p>Scapy, pandas, scikit-learn e o resto do <code class="mono">requirements.txt</code>.</p>
+          <pre>pip install -r requirements.txt</pre>
+        </div>
+        <div class="step" data-tone="fix">
+          <span class="num">passo 4</span>
+          <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"></path><circle cx="12" cy="12" r="9"></circle></svg></div>
+          <h3>Instalar o próprio SIADAR</h3>
+          <p>Registra o pacote <code class="mono">siadar</code> para os comandos <code class="mono">python -m siadar...</code> funcionarem de qualquer pasta.</p>
+          <pre>pip install -e .</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CAPÍTULO 3 — OPERAÇÃO DO DIA A DIA ============ -->
+  <section class="chapter" data-tone="m1">
+    <div class="chapter-head">
+      <div class="chapter-num">3</div>
+      <div>
+        <h2>Operar o sistema no dia a dia</h2>
+        <p class="lede">A jornada completa, do dataset até o veredito sobre um tráfego novo. Siga a ordem — cada seta do capítulo 1 vira um comando aqui.</p>
+      </div>
+    </div>
+    <div class="chapter-body">
+      <div class="steps">
+        <div class="step" data-tone="m2">
+          <span class="num">1 · explorar</span>
+          <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg></div>
+          <h3>Olhar o dataset (EDA)</h3>
+          <p>Baixe o CICIDS2017 (pasta <code class="mono">MachineLearningCVE</code>) em <code class="mono">data/raw/</code> e veja a distribuição das classes antes de treinar.</p>
+          <pre>python scripts/eda.py data/raw/MachineLearningCVE</pre>
+        </div>
+        <div class="step" data-tone="m2">
+          <span class="num">2 · treinar</span>
+          <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a5 5 0 015 5c0 2-1 3-1 5v2H8v-2c0-2-1-3-1-5a5 5 0 015-5z"></path><path d="M9 21h6M10 18h4"></path></svg></div>
+          <h3>Treinar o classificador</h3>
+          <p>Random Forest baseline. Some <code class="mono">--search</code> para o modelo procurar sozinho os melhores hiperparâmetros (mais lento).</p>
+          <pre>python -m siadar.classification.train \
+  data/raw/MachineLearningCVE \
+  --model-out models/rf_classifier.joblib</pre>
+        </div>
+        <div class="step" data-tone="m1">
+          <span class="num">3 · capturar</span>
+          <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="10" rx="2"></rect><path d="M6 12h.01M10 12h.01M14 12h8"></path></svg></div>
+          <h3>Extrair flows de uma captura</h3>
+          <p>Gere um <code class="mono">.pcap</code> com tcpdump/Wireshark, depois agregue os pacotes em flows com as mesmas 29 features do treino.</p>
+          <pre>python -m siadar.capture.pcap_to_flows \
+  captura.pcap -o flows.csv</pre>
+        </div>
+        <div class="step" data-tone="m1">
+          <span class="num">4 · classificar</span>
+          <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v4H4zM4 12h10v8H4zM17 12h3v8h-3z"></path></svg></div>
+          <h3>Aplicar o modelo</h3>
+          <p>Cada flow recebe um rótulo previsto (BENIGN, DDoS, PortScan...) em <code class="mono">predictions.csv</code>.</p>
+          <pre>python -m siadar.classification.predict \
+  models/rf_classifier.joblib flows.csv \
+  -o predictions.csv</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CAPÍTULO 4 — FICHA RÁPIDA ============ -->
+  <section class="chapter" data-tone="trunk">
+    <div class="chapter-head">
+      <div class="chapter-num">4</div>
+      <div>
+        <h2>Ficha rápida de comandos</h2>
+        <p class="lede">A mesma jornada do capítulo 3, em formato de consulta — cole direto no terminal.</p>
+      </div>
+    </div>
+    <div class="chapter-body">
+      <div class="diagram-card" style="overflow-x:visible">
+        <div class="cheat-group" data-tone="fix">
+          <span class="cheat-tab">● setup</span>
+          <div class="cheat-row"><code>python -m venv .venv</code><span class="what">cria o ambiente</span></div>
+          <div class="cheat-row"><code>.venv\Scripts\activate</code><span class="what">ativa o ambiente</span></div>
+          <div class="cheat-row"><code>pip install -r requirements.txt &amp;&amp; pip install -e .</code><span class="what">instala tudo</span></div>
+        </div>
+        <div class="cheat-group" data-tone="m2">
+          <span class="cheat-tab">● treino</span>
+          <div class="cheat-row"><code>python scripts/eda.py data/raw/MachineLearningCVE</code><span class="what">explorar dados</span></div>
+          <div class="cheat-row"><code>python -m siadar.classification.train data/raw/MachineLearningCVE --model-out models/rf_classifier.joblib</code><span class="what">treinar baseline</span></div>
+          <div class="cheat-row"><code>python -m siadar.classification.train data/raw/MachineLearningCVE --model-out models/rf_classifier.joblib --search</code><span class="what">treinar + otimizar</span></div>
+        </div>
+        <div class="cheat-group" data-tone="m1">
+          <span class="cheat-tab">● operação</span>
+          <div class="cheat-row"><code>python -m siadar.capture.pcap_to_flows captura.pcap -o flows.csv</code><span class="what">extrair flows</span></div>
+          <div class="cheat-row"><code>python -m siadar.classification.predict models/rf_classifier.joblib flows.csv -o predictions.csv</code><span class="what">classificar</span></div>
+          <div class="cheat-row"><code>pytest</code><span class="what">rodar os testes</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CAPÍTULO 5 — MANUTENÇÃO / ERROS ============ -->
+  <section class="chapter" data-tone="m3">
+    <div class="chapter-head">
+      <div class="chapter-num">5</div>
+      <div>
+        <h2>Quando algo dá errado</h2>
+        <p class="lede">As quatro falhas mais prováveis no dia a dia — todas já apareceram (ou vão aparecer) no terminal de quem opera o sistema.</p>
+      </div>
+    </div>
+    <div class="chapter-body">
+      <div class="diagram-card">
+        <figure>
+          <svg viewBox="0 0 1000 300" role="img" aria-label="Árvore de decisão: a partir da pergunta 'o comando não funcionou?', quatro sintomas possíveis levam cada um a uma correção específica.">
+            <defs>
+              <marker id="treeArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"></path>
+              </marker>
+            </defs>
+            <rect x="390" y="18" width="220" height="56" rx="10" fill="var(--trunk)"></rect>
+            <text x="500" y="52" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--paper)">O comando não funcionou?</text>
+
+            <g stroke="var(--ink-soft)" fill="none">
+              <path d="M470,74 Q470,120 145,150" marker-end="url(#treeArrow)"></path>
+              <path d="M495,74 Q495,120 385,150" marker-end="url(#treeArrow)"></path>
+              <path d="M505,74 Q505,120 625,150" marker-end="url(#treeArrow)"></path>
+              <path d="M530,74 Q530,120 865,150" marker-end="url(#treeArrow)"></path>
+            </g>
+
+            <rect x="20" y="150" width="250" height="70" rx="10" fill="var(--m3-soft)" stroke="var(--m3)" stroke-width="2"></rect>
+            <text x="145" y="180" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--m3-ink)">"python" não é</text>
+            <text x="145" y="196" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--m3-ink)">reconhecido</text>
+
+            <rect x="260" y="150" width="250" height="70" rx="10" fill="var(--m3-soft)" stroke="var(--m3)" stroke-width="2"></rect>
+            <text x="385" y="180" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--m3-ink)">ModuleNotFoundError</text>
+            <text x="385" y="196" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--m3-ink)">"siadar"</text>
+
+            <rect x="500" y="150" width="250" height="70" rx="10" fill="var(--m3-soft)" stroke="var(--m3)" stroke-width="2"></rect>
+            <text x="625" y="180" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--m3-ink)">Colunas esperadas</text>
+            <text x="625" y="196" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--m3-ink)">ausentes</text>
+
+            <rect x="740" y="150" width="240" height="70" rx="10" fill="var(--m3-soft)" stroke="var(--m3)" stroke-width="2"></rect>
+            <text x="860" y="180" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--m3-ink)">FileNotFoundError</text>
+            <text x="860" y="196" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--m3-ink)">.joblib</text>
+          </svg>
+          <figcaption>Cada sintoma (vermelho) tem uma correção única — detalhadas nos cartões abaixo, na mesma ordem em que aparecem na árvore.</figcaption>
+        </figure>
+      </div>
+
+      <div class="fix-grid">
+        <div class="fix-card">
+          <span class="sym">"python" não é reconhecido</span>
+          <div class="sol"><b>Causa:</b> não há Python instalado, só o atalho da Microsoft Store.<br><b>Correção:</b> instale o Python 3.10+ marcando "Add to PATH" na instalação.</div>
+        </div>
+        <div class="fix-card">
+          <span class="sym">ModuleNotFoundError: siadar</span>
+          <div class="sol"><b>Causa:</b> ambiente virtual não ativado, ou o pacote não foi instalado em modo editável.<br><b>Correção:</b> rode <code class="mono">.venv\Scripts\activate</code> e depois <code class="mono">pip install -e .</code>.</div>
+        </div>
+        <div class="fix-card">
+          <span class="sym">Colunas esperadas ausentes</span>
+          <div class="sol"><b>Causa:</b> a pasta apontada não é o CICIDS2017 real, ou o CSV tem cabeçalhos diferentes do esperado.<br><b>Correção:</b> confirme que é a pasta <code class="mono">MachineLearningCVE</code> e revise o dicionário <code class="mono">_ALIASES</code> em <code class="mono">load_cicids.py</code>.</div>
+        </div>
+        <div class="fix-card">
+          <span class="sym">FileNotFoundError: .joblib</span>
+          <div class="sol"><b>Causa:</b> tentou classificar antes de treinar, ou o caminho não bate.<br><b>Correção:</b> rode <code class="mono">train.py</code> primeiro e confira se <code class="mono">--model-out</code> aponta para o mesmo arquivo usado no <code class="mono">predict.py</code>.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CAPÍTULO 6 — EXPANDIR ============ -->
+  <section class="chapter" data-tone="m4">
+    <div class="chapter-head">
+      <div class="chapter-num">6</div>
+      <div>
+        <h2>Expandindo o mapa</h2>
+        <p class="lede">Os três ramos tracejados do mapa inicial ainda não existem em código. Quando for construí-los, repita o mesmo padrão dos módulos 1 e 2.</p>
+      </div>
+    </div>
+    <div class="chapter-body">
+      <div class="steps">
+        <div class="step" data-tone="trunk">
+          <span class="num">padrão</span>
+          <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="7" height="7"></rect><rect x="13" y="4" width="7" height="7"></rect><rect x="4" y="13" width="7" height="7"></rect><rect x="13" y="13" width="7" height="7"></rect></svg></div>
+          <h3>1. Estenda o schema</h3>
+          <p>Novas features (ex.: para detecção de anomalias) entram em <code class="mono">features/schema.py</code>, nunca soltas nos scripts.</p>
+        </div>
+        <div class="step" data-tone="trunk">
+          <span class="num">padrão</span>
+          <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5a2 2 0 012-2h8l6 6v10a2 2 0 01-2 2H6a2 2 0 01-2-2z"></path><path d="M14 3v6h6"></path></svg></div>
+          <h3>2. Um loader por fonte</h3>
+          <p>Cada dataset novo ganha seu próprio módulo em <code class="mono">data/</code>, do mesmo jeito que <code class="mono">load_cicids.py</code>.</p>
+        </div>
+        <div class="step" data-tone="trunk">
+          <span class="num">padrão</span>
+          <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a5 5 0 015 5c0 2-1 3-1 5v2H8v-2c0-2-1-3-1-5a5 5 0 015-5z"></path><path d="M9 21h6M10 18h4"></path></svg></div>
+          <h3>3. train.py + predict.py</h3>
+          <p>Sempre em par, salvando o modelo com <code class="mono">joblib</code> — é essa ponte que faz o capítulo 1 funcionar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GLOSSÁRIO ============ -->
+  <section class="chapter" data-tone="trunk">
+    <div class="chapter-head">
+      <div class="chapter-num">◆</div>
+      <div>
+        <h2>Glossário visual</h2>
+        <p class="lede">Uma palavra, uma ideia — para revisar rápido antes de mexer no código.</p>
+      </div>
+    </div>
+    <div class="chapter-body">
+      <div class="glossary">
+        <div class="gterm"><div class="w">flow</div><p>Todos os pacotes de uma mesma conversa (5‑tuple: IPs, portas e protocolo) agrupados em uma linha de dados.</p></div>
+        <div class="gterm"><div class="w">5‑tuple</div><p>IP origem, IP destino, porta origem, porta destino e protocolo — a "impressão digital" de um flow.</p></div>
+        <div class="gterm"><div class="w">feature</div><p>Uma medida numérica calculada sobre o flow (duração, bytes, flags TCP...) que o modelo usa para decidir.</p></div>
+        <div class="gterm"><div class="w">IAT</div><p>Inter‑Arrival Time: tempo entre um pacote e o próximo dentro do mesmo flow.</p></div>
+        <div class="gterm"><div class="w">label</div><p>O rótulo verdadeiro (treino) ou previsto (inferência) de um flow: BENIGN, DDoS, PortScan...</p></div>
+        <div class="gterm"><div class="w">scaler</div><p>Reescala todas as features para a mesma faixa de valores antes de entrar no modelo (StandardScaler).</p></div>
+        <div class="gterm"><div class="w">.joblib</div><p>Arquivo onde o modelo treinado, o scaler e o encoder ficam salvos juntos, prontos para reuso.</p></div>
+        <div class="gterm"><div class="w">payload_entropy</div><p>Só existe na captura ao vivo — mede o quão "aleatório" é o conteúdo dos pacotes (tráfego cifrado tende a ser mais aleatório).</p></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>Guia de uso e manutenção do SIADAR · método visual inspirado em mapas mentais</footer>
+</div>

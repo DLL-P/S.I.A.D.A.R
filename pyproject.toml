@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "siadar"
+version = "0.1.0"
+description = "Sistema Inteligente de Analise, Deteccao de Anomalias e Resposta em Redes Corporativas"
+requires-python = ">=3.10"
+license = { text = "Proprietary - All Rights Reserved" }
+authors = [{ name = "R.D.S." }]
+
+[tool.setuptools.packages.find]
+where = ["src"]

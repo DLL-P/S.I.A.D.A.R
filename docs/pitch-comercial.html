@@ -1,0 +1,525 @@
+<title>Proposta de Valor SIADAR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --paper: #eef1f3;
+    --paper-grid: #e1e7eb;
+    --surface: #ffffff;
+    --surface-2: #f5f7f8;
+    --surface-border: #d7dee3;
+    --ink: #182430;
+    --ink-soft: #52626f;
+    --ink-faint: #8695a1;
+    --trunk: #24303c;
+
+    --m1: #1f8a83; --m1-soft: #d7efec; --m1-ink: #0f4b47;
+    --m2: #bd7a1e; --m2-soft: #f6e8ce; --m2-ink: #6b4610;
+    --m3: #b23a48; --m3-soft: #f5dce0; --m3-ink: #6e222c;
+    --m4: #6a4c9c; --m4-soft: #e6ddf3; --m4-ink: #3c2a5b;
+    --m5: #3a5a8c; --m5-soft: #dde6f2; --m5-ink: #223752;
+    --fix: #2f7d52; --fix-soft: #d9ede1; --fix-ink: #164a30;
+
+    --gold: #a97417;
+    --gold-soft: #f6e8ce;
+    --gold-ink: #6b4610;
+
+    --code-bg: #182430;
+    --code-fg: #e9edf1;
+
+    /* status (reserved, never reused as series color) */
+    --st-good: #0ca30c;
+    --st-warn: #b8790f;
+    --st-crit: #b23a48;
+
+    --font-display: "Fraunces", ui-serif, Georgia, serif;
+    --font-body: "Public Sans", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #10151b;
+      --paper-grid: #1a222a;
+      --surface: #171f27;
+      --surface-2: #1c252e;
+      --surface-border: #2b3742;
+      --ink: #e8edf1;
+      --ink-soft: #aab8c3;
+      --ink-faint: #728290;
+      --trunk: #cdd7df;
+
+      --m1: #4bc9bd; --m1-soft: #123330; --m1-ink: #9fe9df;
+      --m2: #e3ac52; --m2-soft: #362610; --m2-ink: #f1cb8e;
+      --m3: #e17c88; --m3-soft: #3a1e22; --m3-ink: #f2b6bd;
+      --m4: #ab8fdb; --m4-soft: #291f3d; --m4-ink: #d6c6f2;
+      --m5: #85a9dd; --m5-soft: #1c2939; --m5-ink: #bdd2ef;
+      --fix: #59b381; --fix-soft: #142a1e; --fix-ink: #a8e2c1;
+
+      --gold: #e3ac52; --gold-soft: #362610; --gold-ink: #f1cb8e;
+
+      --code-bg: #0c1116;
+      --code-fg: #e6edf3;
+
+      --st-good: #35c46a;
+      --st-warn: #e3ac52;
+      --st-crit: #e17c88;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #10151b; --paper-grid: #1a222a; --surface: #171f27; --surface-2: #1c252e; --surface-border: #2b3742;
+    --ink: #e8edf1; --ink-soft: #aab8c3; --ink-faint: #728290; --trunk: #cdd7df;
+    --m1: #4bc9bd; --m1-soft: #123330; --m1-ink: #9fe9df;
+    --m2: #e3ac52; --m2-soft: #362610; --m2-ink: #f1cb8e;
+    --m3: #e17c88; --m3-soft: #3a1e22; --m3-ink: #f2b6bd;
+    --m4: #ab8fdb; --m4-soft: #291f3d; --m4-ink: #d6c6f2;
+    --m5: #85a9dd; --m5-soft: #1c2939; --m5-ink: #bdd2ef;
+    --fix: #59b381; --fix-soft: #142a1e; --fix-ink: #a8e2c1;
+    --gold: #e3ac52; --gold-soft: #362610; --gold-ink: #f1cb8e;
+    --code-bg: #0c1116; --code-fg: #e6edf3;
+    --st-good: #35c46a; --st-warn: #e3ac52; --st-crit: #e17c88;
+  }
+
+  /* fixed-dark operations-console surface for the dashboard mockup — a SOC
+     screen reads as dark regardless of page theme, this is an intentional
+     single-theme component, not a token gap */
+  .console {
+    --c-surface: #0b1117;
+    --c-surface-2: #121a23;
+    --c-border: #223040;
+    --c-ink: #e7edf3;
+    --c-ink-soft: #8ea2b3;
+    --c-grid: #1a2530;
+    --c-web: #3987e5;
+    --c-stream: #d9895a;
+    --c-voip: #2fae86;
+    --c-gaming: #c98500;
+    --c-other: #56636e;
+    --c-crit: #e0697a;
+    --c-warn: #e3ac52;
+    --c-good: #35c46a;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background:
+      linear-gradient(var(--paper-grid) 1px, transparent 1px) 0 0/100% 34px,
+      linear-gradient(90deg, var(--paper-grid) 1px, transparent 1px) 0 0/34px 100%,
+      var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; color: var(--ink); }
+  p { margin: 0; }
+  code, .mono { font-family: var(--font-mono); }
+  .tab-num { font-variant-numeric: tabular-nums; }
+  figure { margin: 0; }
+
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px 110px; }
+
+  .eyebrow {
+    font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .eyebrow::before { content: ""; width: 22px; height: 2px; background: var(--gold); display: inline-block; }
+
+  /* ---------- HERO ---------- */
+  .hero { padding: 68px 0 8px; }
+  .hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 48px; align-items: center; }
+  .hero h1 { font-size: clamp(32px, 4.2vw, 48px); font-weight: 700; margin-top: 14px; line-height: 1.08; }
+  .hero .lede { margin-top: 16px; color: var(--ink-soft); font-size: 17px; max-width: 52ch; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px; margin-top: 22px;
+    font-family: var(--font-mono); font-size: 12px; color: var(--fix-ink);
+    background: var(--fix-soft); border-radius: 999px; padding: 6px 14px;
+  }
+  .hero-badge .pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--fix); }
+
+  .hero-figure {
+    background: var(--surface); border: 1px solid var(--surface-border); border-radius: 16px; padding: 22px;
+  }
+  .hero-figure svg { width: 100%; height: auto; display: block; }
+  .hero-figure figcaption { font-size: 12.5px; color: var(--ink-faint); margin-top: 10px; text-align: center; }
+
+  .stat-row {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 44px;
+  }
+  .stat-tile {
+    background: var(--surface); border: 1px solid var(--surface-border); border-radius: 12px; padding: 18px 20px;
+  }
+  .stat-tile .v { font-family: var(--font-display); font-size: 30px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .stat-tile .l { font-size: 12.5px; color: var(--ink-soft); margin-top: 4px; }
+
+  /* ---------- SECTION shell ---------- */
+  .section { margin-top: 88px; }
+  .section-head { max-width: 68ch; margin-bottom: 30px; }
+  .section-head h2 { font-size: clamp(24px, 3vw, 30px); margin-top: 8px; }
+  .section-head p { color: var(--ink-soft); font-size: 15px; margin-top: 10px; }
+
+  /* ---------- PROBLEM ---------- */
+  .problem-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .problem-card {
+    background: var(--surface); border: 1px solid var(--surface-border); border-radius: 12px; padding: 20px;
+  }
+  .problem-card .n { font-family: var(--font-mono); font-size: 11.5px; color: var(--st-crit); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+  .problem-card h3 { font-size: 16px; margin-top: 8px; font-family: var(--font-body); font-weight: 700; }
+  .problem-card p { font-size: 13.5px; color: var(--ink-soft); margin-top: 8px; }
+  .source-note { font-size: 12px; color: var(--ink-faint); margin-top: 16px; }
+
+  /* ---------- VALUE PILLARS ---------- */
+  .pillars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .pillar {
+    background: var(--surface); border: 1px solid var(--surface-border); border-radius: 12px; padding: 20px;
+    border-top: 3px solid var(--tone);
+  }
+  .pillar[data-tone="m1"] { --tone: var(--m1); }
+  .pillar[data-tone="m2"] { --tone: var(--m2); }
+  .pillar[data-tone="m4"] { --tone: var(--m4); }
+  .pillar[data-tone="m5"] { --tone: var(--m5); }
+  .pillar .ic { width: 30px; height: 30px; color: var(--tone); }
+  .pillar h3 { font-size: 15px; margin-top: 12px; font-family: var(--font-body); font-weight: 700; }
+  .pillar p { font-size: 13px; color: var(--ink-soft); margin-top: 8px; }
+
+  /* ---------- DASHBOARD MOCKUP ---------- */
+  .console {
+    border-radius: 16px; padding: 22px 22px 18px; background: var(--c-surface);
+    border: 1px solid var(--c-border); color: var(--c-ink);
+  }
+  .console-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; flex-wrap: wrap; gap: 10px; }
+  .console-head .title { font-family: var(--font-mono); font-size: 12.5px; font-weight: 600; letter-spacing: .03em; color: var(--c-ink); }
+  .console-head .mock-badge {
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--c-ink-soft); border: 1px solid var(--c-border); border-radius: 999px; padding: 3px 10px;
+  }
+  .console-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+  .c-stat { background: var(--c-surface-2); border: 1px solid var(--c-border); border-radius: 10px; padding: 12px 14px; }
+  .c-stat .v { font-family: var(--font-display); font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .c-stat .l { font-size: 11px; color: var(--c-ink-soft); margin-top: 3px; }
+  .c-stat.crit .v { color: var(--c-crit); }
+  .c-stat.warn .v { color: var(--c-warn); }
+  .c-stat.good .v { color: var(--c-good); }
+
+  .console-body { display: grid; grid-template-columns: 1.3fr 1fr; gap: 14px; }
+  .console-panel { background: var(--c-surface-2); border: 1px solid var(--c-border); border-radius: 10px; padding: 14px 16px; }
+  .console-panel h4 { font-size: 11.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--c-ink-soft); font-weight: 600; margin: 0 0 12px; }
+
+  .bar-row { display: grid; grid-template-columns: 92px 1fr 46px; align-items: center; gap: 10px; margin-bottom: 9px; font-size: 12px; }
+  .bar-row:last-child { margin-bottom: 0; }
+  .bar-track { height: 8px; background: var(--c-grid); border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; }
+  .bar-row .pct { text-align: right; font-variant-numeric: tabular-nums; color: var(--c-ink-soft); }
+
+  .alert-row { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-top: 1px solid var(--c-border); font-size: 12px; }
+  .alert-row:first-child { border-top: none; padding-top: 0; }
+  .alert-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; flex: none; }
+  .alert-dot.crit { background: var(--c-crit); }
+  .alert-dot.warn { background: var(--c-warn); }
+  .alert-row .txt b { color: var(--c-ink); font-weight: 600; }
+  .alert-row .txt span { color: var(--c-ink-soft); display: block; font-size: 11px; margin-top: 1px; }
+  .console-cap { font-size: 12px; color: var(--ink-faint); margin-top: 14px; text-align: center; }
+
+  /* ---------- COMPARISON TABLE ---------- */
+  .cmp-wrap { overflow-x: auto; border: 1px solid var(--surface-border); border-radius: 12px; background: var(--surface); }
+  table.cmp { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 13.5px; }
+  table.cmp th, table.cmp td { text-align: left; padding: 13px 18px; border-bottom: 1px solid var(--surface-border); vertical-align: top; }
+  table.cmp thead th { font-family: var(--font-mono); font-size: 11.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-faint); font-weight: 600; }
+  table.cmp tbody tr:last-child td { border-bottom: none; }
+  table.cmp td.dim { font-weight: 600; color: var(--ink); width: 22%; }
+  table.cmp td.siadar { color: var(--fix-ink); }
+  table.cmp td.enterprise { color: var(--ink-soft); }
+
+  /* ---------- PROOF ---------- */
+  .proof-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .proof-card { background: var(--surface); border: 1px solid var(--surface-border); border-radius: 12px; padding: 20px; }
+  .proof-card .tag { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: .05em; padding: 3px 9px; border-radius: 999px; display: inline-block; }
+  .proof-card.done .tag { background: var(--fix-soft); color: var(--fix-ink); }
+  .proof-card.lit .tag { background: var(--m5-soft); color: var(--m5-ink); }
+  .proof-card ul { margin: 12px 0 0; padding-left: 18px; font-size: 13.5px; color: var(--ink-soft); }
+  .proof-card li { margin-bottom: 6px; }
+  .proof-card li b { color: var(--ink); }
+
+  /* ---------- ROADMAP MATURITY ---------- */
+  .maturity { display: flex; align-items: center; gap: 4px; margin-top: 20px; }
+  .m-step { flex: 1; display: grid; gap: 6px; text-align: center; }
+  .m-step .bar { height: 6px; border-radius: 3px; background: var(--surface-border); }
+  .m-step.on .bar { background: var(--fix); }
+  .m-step .lbl { font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); }
+  .m-step.on .lbl { color: var(--fix-ink); font-weight: 600; }
+
+  /* ---------- ENGAGEMENT ---------- */
+  .engage { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .engage-card { background: var(--surface); border: 1px solid var(--surface-border); border-radius: 14px; padding: 24px; position: relative; }
+  .engage-card .step { font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); letter-spacing: .05em; }
+  .engage-card h3 { font-size: 17px; margin-top: 8px; }
+  .engage-card p { font-size: 13.5px; color: var(--ink-soft); margin-top: 10px; }
+  .engage-card.active { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold) inset; }
+  .engage-card .flag { position: absolute; top: -10px; right: 18px; background: var(--gold); color: var(--surface); font-family: var(--font-mono); font-size: 10.5px; padding: 3px 10px; border-radius: 999px; letter-spacing: .04em; }
+
+  .cta-strip {
+    margin-top: 28px; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+    background: var(--trunk); border-radius: 14px; padding: 26px 28px;
+  }
+  .cta-strip p { color: var(--paper); font-size: 15px; max-width: 46ch; }
+  .cta-strip .btn {
+    font-family: var(--font-mono); font-size: 13px; font-weight: 600; color: var(--trunk);
+    background: var(--paper); padding: 12px 22px; border-radius: 9px; white-space: nowrap;
+  }
+
+  footer {
+    margin-top: 90px; padding-top: 24px; border-top: 1px solid var(--surface-border);
+    color: var(--ink-faint); font-size: 12.5px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  }
+
+  @media (max-width: 860px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .stat-row, .problem-grid, .pillars, .engage, .proof-grid { grid-template-columns: 1fr 1fr; }
+    .console-body { grid-template-columns: 1fr; }
+    .console-stats { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) {
+    .stat-row, .problem-grid, .pillars, .engage, .proof-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="wrap">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">Proposta de valor · para tomadores de decisão</div>
+        <h1>Detecção de anomalias de rede sem o preço de um SIEM corporativo.</h1>
+        <p class="lede">O SIADAR aplica machine learning para classificar tráfego e sinalizar comportamento anômalo — construído sobre uma pilha 100% open-source, pensado para times que precisam de visibilidade real sem orçamento de grande conta.</p>
+        <div class="hero-badge"><span class="pulse"></span> Prova de conceito funcional · 2 de 5 módulos em operação</div>
+
+        <div class="stat-row">
+          <div class="stat-tile"><div class="v">R$ 0</div><div class="l">em licenciamento do motor de ML — pilha open-source</div></div>
+          <div class="stat-tile"><div class="v tab-num">29</div><div class="l">features padronizadas, mesmas no treino e na captura ao vivo</div></div>
+          <div class="stat-tile"><div class="v tab-num">2/5</div><div class="l">módulos implementados e cobertos por testes automatizados</div></div>
+        </div>
+      </div>
+
+      <figure class="hero-figure">
+        <svg viewBox="0 0 380 380" role="img" aria-label="Mapa dos cinco módulos do SIADAR ao redor de um núcleo central: Captura e Triagem em destaque sólido como já implementados; Anomalia, Perfil e Previsão em traço tracejado como próximas etapas do roadmap.">
+          <path d="M190,130 Q210,80 190,30" fill="none" stroke="var(--m1)" stroke-width="5" stroke-linecap="round"></path>
+          <path d="M226,152 Q270,120 305,100" fill="none" stroke="var(--m2)" stroke-width="5" stroke-linecap="round"></path>
+          <path d="M214,196 Q240,250 262,290" fill="none" stroke="var(--m3)" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 8"></path>
+          <path d="M166,196 Q140,250 118,290" fill="none" stroke="var(--m4)" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 8"></path>
+          <path d="M154,152 Q110,120 75,100" fill="none" stroke="var(--m5)" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 8"></path>
+
+          <circle cx="190" cy="163" r="44" fill="var(--trunk)"></circle>
+          <text x="190" y="169" text-anchor="middle" font-size="15" font-weight="700" fill="var(--paper)" font-family="var(--font-display)">SIADAR</text>
+
+          <circle cx="190" cy="30" r="34" fill="var(--m1-soft)" stroke="var(--m1)" stroke-width="2.5"></circle>
+          <text x="190" y="34" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--m1-ink)">CAPTURA</text>
+
+          <circle cx="305" cy="100" r="34" fill="var(--m2-soft)" stroke="var(--m2)" stroke-width="2.5"></circle>
+          <text x="305" y="104" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--m2-ink)">TRIAGEM</text>
+
+          <circle cx="262" cy="290" r="34" fill="var(--m3-soft)" stroke="var(--m3)" stroke-width="2" stroke-dasharray="3 4"></circle>
+          <text x="262" y="294" text-anchor="middle" font-size="11" font-weight="700" fill="var(--m3-ink)">ANOMALIA</text>
+
+          <circle cx="118" cy="290" r="34" fill="var(--m4-soft)" stroke="var(--m4)" stroke-width="2" stroke-dasharray="3 4"></circle>
+          <text x="118" y="294" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--m4-ink)">PERFIL</text>
+
+          <circle cx="75" cy="100" r="34" fill="var(--m5-soft)" stroke="var(--m5)" stroke-width="2" stroke-dasharray="3 4"></circle>
+          <text x="75" y="104" text-anchor="middle" font-size="11" font-weight="700" fill="var(--m5-ink)">PREVISÃO</text>
+        </svg>
+        <figcaption>Arquitetura modular: cada módulo entra em produção de forma independente — o investimento cresce junto com o valor entregue.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ PROBLEMA ============ -->
+  <section class="section">
+    <div class="section-head">
+      <div class="eyebrow">O custo de não ter visibilidade</div>
+      <h2>Toda empresa com rede é alvo — poucas têm orçamento para se defender como uma grande conta.</h2>
+    </div>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="n">Custo de incidente</div>
+        <h3>Um vazamento custa milhões</h3>
+        <p>Relatórios anuais do setor (ex.: IBM Cost of a Data Breach) apontam custo médio global de incidente acima de US$ 4 milhões — a maior parte do valor vem do tempo até detectar e conter o ataque.</p>
+      </div>
+      <div class="problem-card">
+        <div class="n">Modelo de cobrança</div>
+        <h3>SIEM corporativo cobra por volume</h3>
+        <p>Soluções de mercado tradicionalmente precificam por GB ingerido ou por endpoint — o custo sobe junto com o crescimento da empresa, não com o risco real.</p>
+      </div>
+      <div class="problem-card">
+        <div class="n">Tempo de implantação</div>
+        <h3>Meses até o primeiro alerta útil</h3>
+        <p>Plataformas corporativas de ponta a ponta costumam exigir projetos longos de integração antes de gerar o primeiro sinal acionável para o time de segurança.</p>
+      </div>
+    </div>
+    <p class="source-note">Números de contexto de mercado citados de forma aproximada e ilustrativa, a partir de relatórios públicos do setor — não são medições do SIADAR.</p>
+  </section>
+
+  <!-- ============ VALOR ============ -->
+  <section class="section">
+    <div class="section-head">
+      <div class="eyebrow">Onde o valor aparece</div>
+      <h2>Quatro alavancas de negócio, não só tecnologia.</h2>
+      <p>Cada módulo do SIADAR foi desenhado para reduzir uma fricção específica do dia a dia de quem opera segurança de rede sem uma equipe grande por trás.</p>
+    </div>
+    <div class="pillars">
+      <div class="pillar" data-tone="m1">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"></path></svg>
+        <h3>Automação do triado</h3>
+        <p>Captura, extração de features e classificação rodam em pipeline — o time deixa de olhar pacote por pacote e passa a revisar exceções.</p>
+      </div>
+      <div class="pillar" data-tone="m2">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"></rect><rect x="14" y="3" width="7" height="5" rx="1.5"></rect><rect x="14" y="12" width="7" height="9" rx="1.5"></rect><rect x="3" y="16" width="7" height="5" rx="1.5"></rect></svg>
+        <h3>Módulo a módulo</h3>
+        <p>Sem lock-in: comece pela captura e triagem, meça o resultado, e só então decida investir nos módulos de anomalia, perfil e previsão.</p>
+      </div>
+      <div class="pillar" data-tone="m4">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V4a2 2 0 012-2h8l6 6v12a2 2 0 01-2 2H6a2 2 0 01-2-2z"></path><path d="M14 2v6h6M9 13h6M9 17h6"></path></svg>
+        <h3>Código auditável</h3>
+        <p>Sem caixa-preta: o pipeline, as features e a lógica de decisão ficam abertos para auditoria interna e compliance — nada escondido atrás de um contrato de licença.</p>
+      </div>
+      <div class="pillar" data-tone="m5">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"></path><path d="M7 15l4-5 3 3 5-7"></path></svg>
+        <h3>Custo alinhado ao risco</h3>
+        <p>Sem cobrança por GB ingerido: o custo de operar é o custo de infraestrutura, não uma régua comercial que penaliza o crescimento da empresa.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DASHBOARD MOCKUP ============ -->
+  <section class="section">
+    <div class="section-head">
+      <div class="eyebrow">Visibilidade operacional</div>
+      <h2>O que o time de segurança vê no dia a dia.</h2>
+      <p>Protótipo do painel operacional alimentado pelos módulos de Captura e Triagem — pensado para ficar aberto na mesa do analista, não só num relatório mensal.</p>
+    </div>
+
+    <div class="console">
+      <div class="console-head">
+        <span class="title">SIADAR · PAINEL OPERACIONAL</span>
+        <span class="mock-badge">mockup — dados ilustrativos</span>
+      </div>
+
+      <div class="console-stats">
+        <div class="c-stat"><div class="v tab-num">128,4k</div><div class="l">flows analisados (24h)</div></div>
+        <div class="c-stat crit"><div class="v tab-num">1,2%</div><div class="l">tráfego classificado como malicioso</div></div>
+        <div class="c-stat warn"><div class="v tab-num">3</div><div class="l">alertas ativos aguardando revisão</div></div>
+        <div class="c-stat good"><div class="v tab-num">42ms</div><div class="l">latência média de classificação</div></div>
+      </div>
+
+      <div class="console-body">
+        <div class="console-panel">
+          <h4>Tráfego benigno por categoria</h4>
+          <div class="bar-row"><span>Web</span><div class="bar-track"><div class="bar-fill" style="width:52%;background:var(--c-web)"></div></div><span class="pct">52%</span></div>
+          <div class="bar-row"><span>Streaming</span><div class="bar-track"><div class="bar-fill" style="width:23%;background:var(--c-stream)"></div></div><span class="pct">23%</span></div>
+          <div class="bar-row"><span>VoIP</span><div class="bar-track"><div class="bar-fill" style="width:12%;background:var(--c-voip)"></div></div><span class="pct">12%</span></div>
+          <div class="bar-row"><span>Gaming/P2P</span><div class="bar-track"><div class="bar-fill" style="width:8%;background:var(--c-gaming)"></div></div><span class="pct">8%</span></div>
+          <div class="bar-row"><span>Outros</span><div class="bar-track"><div class="bar-fill" style="width:5%;background:var(--c-other)"></div></div><span class="pct">5%</span></div>
+        </div>
+        <div class="console-panel">
+          <h4>Alertas recentes</h4>
+          <div class="alert-row"><span class="alert-dot crit"></span><div class="txt"><b>Portscan detectado</b> — 10.0.4.18 → 42 portas em 6s<span>há 4 min · severidade alta</span></div></div>
+          <div class="alert-row"><span class="alert-dot warn"></span><div class="txt"><b>Beaconing suspeito</b> — intervalo regular de 60s<span>há 22 min · severidade média</span></div></div>
+          <div class="alert-row"><span class="alert-dot crit"></span><div class="txt"><b>Volume de upload atípico</b> — 3,4x acima do padrão do host<span>há 1h 08 · severidade alta</span></div></div>
+        </div>
+      </div>
+    </div>
+    <p class="console-cap">Layout de referência para os módulos 1 e 2 já implementados — os alertas de anomalia (módulo 3) e perfil de usuário (módulo 4) entram neste mesmo painel conforme o roadmap avança.</p>
+  </section>
+
+  <!-- ============ COMPARATIVO ============ -->
+  <section class="section">
+    <div class="section-head">
+      <div class="eyebrow">Posicionamento honesto</div>
+      <h2>Não é uma promessa de substituir uma plataforma global — é uma alternativa dimensionada para outra realidade de orçamento.</h2>
+      <p>Grandes fornecedores de SIEM/XDR corporativo têm décadas de maturidade e escala comprovada em produção. O SIADAR não compete nesse terreno — compete em custo, transparência e velocidade de adoção para quem hoje não tem alternativa nenhuma.</p>
+    </div>
+    <div class="cmp-wrap">
+      <table class="cmp">
+        <thead><tr><th>Dimensão</th><th>SIADAR</th><th>SIEM / XDR corporativo tradicional</th></tr></thead>
+        <tbody>
+          <tr><td class="dim">Licenciamento</td><td class="siadar">Pilha open-source, sem custo de licença do motor de ML</td><td class="enterprise">Contratos anuais, geralmente por volume de dados ingerido</td></tr>
+          <tr><td class="dim">Implantação</td><td class="siadar">Modular — adota-se módulo a módulo, com ganho mensurável a cada etapa</td><td class="enterprise">Projeto único e amplo, meses até o primeiro valor</td></tr>
+          <tr><td class="dim">Customização</td><td class="siadar">Código aberto, features e modelo ajustáveis ao tráfego real da empresa</td><td class="enterprise">Customização dentro dos limites do plano contratado</td></tr>
+          <tr><td class="dim">Maturidade / escala</td><td class="siadar">Prova de conceito validada em dataset público, piloto supervisionado é o próximo passo</td><td class="enterprise">Escala global comprovada, suporte 24/7, décadas de operação</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ PROVA ============ -->
+  <section class="section">
+    <div class="section-head">
+      <div class="eyebrow">Prova de engenharia, não promessa</div>
+      <h2>O que já foi construído e testado — e o que é referência de literatura.</h2>
+    </div>
+    <div class="proof-grid">
+      <div class="proof-card done">
+        <span class="tag">verificado nesta sessão</span>
+        <ul>
+          <li><b>Pipeline de captura → features → treino → predição</b> rodando de ponta a ponta, validado com dados sintéticos.</li>
+          <li><b>Suíte de testes automatizados</b> cobrindo a extração de flows a partir de pacotes reais (pytest + scapy).</li>
+          <li><b>Schema único de 29 features</b> compartilhado entre o treino (dataset público) e a captura ao vivo — sem retrabalho ao colocar em produção.</li>
+        </ul>
+      </div>
+      <div class="proof-card lit">
+        <span class="tag">referência de literatura</span>
+        <ul>
+          <li>Estudos acadêmicos que aplicam Random Forest sobre o CICIDS2017 costumam reportar <b>accuracy acima de 95%</b> em ambiente controlado.</li>
+          <li>Esses números validam a <b>escolha do algoritmo e do dataset</b> — não são, ainda, resultado de produção do SIADAR.</li>
+          <li>Validação com tráfego real do cliente é o objetivo explícito da fase de piloto.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="maturity">
+      <div class="m-step on"><div class="bar"></div><div class="lbl">Prova de conceito</div></div>
+      <div class="m-step"><div class="bar"></div><div class="lbl">Piloto supervisionado</div></div>
+      <div class="m-step"><div class="bar"></div><div class="lbl">Produção monitorada</div></div>
+      <div class="m-step"><div class="bar"></div><div class="lbl">Escala contínua</div></div>
+    </div>
+  </section>
+
+  <!-- ============ ENGAJAMENTO ============ -->
+  <section class="section">
+    <div class="section-head">
+      <div class="eyebrow">Como começar</div>
+      <h2>Três passos, risco crescente e mensurável em cada um.</h2>
+    </div>
+    <div class="engage">
+      <div class="engage-card active">
+        <span class="flag">ponto de entrada</span>
+        <span class="step">passo 1</span>
+        <h3>Diagnóstico técnico</h3>
+        <p>Avaliação do ambiente de rede atual e do que já existe em ferramentas de monitoramento — sem compromisso, para mapear onde o SIADAR agrega valor real.</p>
+      </div>
+      <div class="engage-card">
+        <span class="step">passo 2</span>
+        <h3>Piloto controlado</h3>
+        <p>Implantação dos módulos de Captura e Triagem num segmento de rede de teste, com métricas coletadas sobre o tráfego real da empresa.</p>
+      </div>
+      <div class="engage-card">
+        <span class="step">passo 3</span>
+        <h3>Evolução contínua</h3>
+        <p>Expansão para Anomalia, Perfil (UEBA) e Previsão conforme o roadmap, com escopo e investimento definidos etapa a etapa — nunca tudo de uma vez.</p>
+      </div>
+    </div>
+
+    <div class="cta-strip">
+      <p>Proposta técnica e comercial sob medida para o escopo e o orçamento da sua operação — sem pacote fechado de "tudo ou nada".</p>
+      <span class="btn">Agendar diagnóstico técnico →</span>
+    </div>
+  </section>
+
+  <footer>
+    <span>SIADAR — projeto em evolução, construído sob orientação acadêmica e aberto a parcerias piloto.</span>
+    <span>Proposta de valor · uso interno para decisão</span>
+  </footer>
+</div>
