@@ -178,6 +178,13 @@ ambiente corporativo é o objetivo explícito da fase de piloto.
    detecção de anomalias, perfil comportamental de usuários (UEBA) e predição
    de falhas — ver [Roadmap](#roadmap).
 
+## Demo rápida (sem baixar o dataset real)
+
+Quer ver o pipeline funcionando agora, sem baixar o CICIDS2017? Veja
+[`demo/README.md`](demo/README.md) — gera dados e uma captura sintéticos e
+roda captura → treino → predição de ponta a ponta com os mesmos comandos
+reais do projeto.
+
 ## Instalação
 
 ```bash

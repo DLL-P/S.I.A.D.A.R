@@ -13,4 +13,5 @@ models/*.pkl
 .ipynb_checkpoints/
 .claude/
 outputs/
+demo/output/
 
