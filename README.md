@@ -147,33 +147,52 @@ docs/                       # material visual: guia de uso e proposta comercial
 
 ## Prova de conceito — o que já funciona
 
-O que está listado abaixo foi executado e verificado, não é projeção:
+O que está listado abaixo foi executado e verificado, não é projeção.
 
 - **Pipeline de ponta a ponta** — captura → extração de features → treino →
-  predição — validado com dados sintéticos que simulam o formato real do
-  CICIDS2017 e de uma captura `.pcap`.
+  predição — validado tanto com dados sintéticos quanto com o **CICIDS2017
+  real** (2.827.876 flows, 15 classes).
 - **Suíte de testes automatizados** (`pytest` + `scapy`) cobrindo a agregação
-  de pacotes em flows: um pcap sintético bidirecional é processado e as
-  features resultantes (contagem de pacotes, bytes, flags TCP, entropia do
-  payload) são conferidas contra o valor esperado.
+  de pacotes em flows e o pipeline completo de treino/inferência.
 - **Schema único de 29 features** compartilhado entre o carregador do dataset
   público e o extrator de captura ao vivo — a mesma peça de código garante que
   modelo treinado e tráfego capturado nunca "falem idiomas diferentes".
-- **Detector de anomalias (Isolation Forest)** treinado só com tráfego
-  normal e avaliado contra ataques nunca vistos no treino: no dataset
-  sintético de demonstração, sinaliza corretamente flows de captura real
-  fora da amostra de treino, sem falsos positivos no tráfego normal
-  correspondente — ver [`demo/README.md`](demo/README.md).
 
-**O que é referência de literatura, não resultado próprio ainda:** estudos
-acadêmicos que aplicam Random Forest sobre o CICIDS2017 costumam reportar
-*accuracy* acima de 95% em ambiente controlado. Esses números validam a
-escolha do algoritmo e do dataset — a validação com tráfego real de um
-ambiente corporativo é o objetivo explícito da fase de piloto.
+### Resultado real — Triagem de tráfego (M2, Random Forest sobre o CICIDS2017 completo)
+
+| Classe | Precision | Recall | Amostras (teste) |
+|---|---|---|---|
+| BENIGN | 1.00 | 0.91 | 454.265 |
+| DDoS | 1.00 | 1.00 | 25.605 |
+| PortScan | 0.99 | 1.00 | 31.761 |
+| DoS Hulk | 0.86 | 1.00 | 46.025 |
+| Bot | 0.03 | 0.99 | 391 |
+| SSH-Patator | 0.07 | 0.93 | 1.180 |
+| Web Attack (SQL Injection) | 0.00 | 0.50 | 4 |
+
+**Accuracy geral: 93% · F1 ponderado: 0,95.** Nas classes bem representadas
+o modelo é excelente; nas classes raras (poucas dezenas/centenas de
+exemplos contra milhões de linhas normais) a precisão despenca — o
+clássico problema de **classes desbalanceadas**. Mitigação prevista no
+roadmap (SMOTE / `imbalanced-learn`, já no `requirements.txt`).
+
+### Resultado real — Detecção de anomalias (M3, Isolation Forest treinado só com BENIGN)
+
+**Accuracy: 72% · AUC-ROC: 0,74 · Recall em ataques: 45%.** Testamos
+recalibrar o limiar de decisão (`--contamination` de 0,05 para 0,15): o
+recall praticamente não mudou (45% → 46%) e a acurácia geral piorou — ou
+seja, 0,74 de AUC é o teto real do modelo atual com esse conjunto de
+features, não um problema de calibração. É um detector honesto, mas
+modesto: metade dos ataques passa despercebido sem o sinal do módulo de
+triagem. Trabalho futuro natural: features adicionais, ou testar
+Autoencoder/One-Class SVM como o guia original sugeria.
+
+Os relatórios completos (`classification_report`, matrizes de confusão)
+estão em [`models/`](models/).
 
 **Estágio de maturidade:**
 
-`Prova de conceito ✅` → `Piloto supervisionado 🕒` → `Produção monitorada 🕒` → `Escala contínua 🕒`
+`Prova de conceito ✅` → `Validação com dataset público real ✅` → `Piloto supervisionado 🕒` → `Produção monitorada 🕒`
 
 ## Como o sistema pensa
 
@@ -263,8 +282,18 @@ pytest
   CICFlowMeter — os valores numéricos podem divergir ligeiramente do dataset
   de treino em casos extremos (fragmentação, retransmissões).
 - Timeout de flow fixo em 120s (mesma heurística do CICFlowMeter).
-- Accuracy/F1 de literatura citados neste documento **não** são medições do
-  modelo treinado neste repositório — ver [Prova de conceito](#prova-de-conceito--o-que-já-funciona).
+- O CICIDS2017 real tem classes severamente desbalanceadas (ex.: 391
+  amostras de `Bot` contra 2,27 milhões de `BENIGN`); o classificador
+  baseline (M2) tem precisão baixa nas classes raras — ver
+  [Prova de conceito](#prova-de-conceito--o-que-já-funciona) e "Roadmap".
+- O detector de anomalias (M3) atinge AUC-ROC 0,74 no CICIDS2017 real —
+  detecta menos da metade dos ataques sozinho; recalibrar o limiar
+  (`--contamination`) não melhora isso, é o teto do modelo atual com esse
+  conjunto de features. Útil como sinal complementar ao M2, não como
+  detector isolado.
+- O dataset original do CICIDS2017 tem valores de `Flow Duration`
+  negativos em algumas linhas (artefato conhecido do CICFlowMeter) —
+  `load_cicids.py` não filtra isso hoje.
 - O detector de anomalias (M3) é **sensível à escala das features**, ao
   contrário do classificador (M2): durante o desenvolvimento, um dataset de
   treino com unidades inconsistentes em relação ao extrator de captura real
@@ -280,6 +309,9 @@ pytest
 - [x] Módulo 1 — Captura e pré-processamento (flows a partir de pcap)
 - [x] Módulo 2 — Classificação de tráfego (Random Forest baseline)
 - [x] Módulo 3 — Detecção de anomalias (Isolation Forest)
+- [x] Validação com o CICIDS2017 real (2,83M flows) — números em [Prova de conceito](#prova-de-conceito--o-que-já-funciona)
+- [ ] Tratar desbalanceamento de classes no M2 (SMOTE / `imbalanced-learn`, já nas dependências)
+- [ ] Melhorar o M3 além do teto de AUC 0,74 (novas features, ou testar Autoencoder/One-Class SVM)
 - [ ] Módulo 4 — UEBA (baseline comportamental por usuário, clustering)
 - [ ] Módulo 5 — Predição de falhas e vulnerabilidades
 - [ ] Dashboard (Grafana ou Streamlit) para visualização em tempo real
