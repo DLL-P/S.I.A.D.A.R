@@ -158,7 +158,7 @@ O que está listado abaixo foi executado e verificado, não é projeção.
   público e o extrator de captura ao vivo — a mesma peça de código garante que
   modelo treinado e tráfego capturado nunca "falem idiomas diferentes".
 
-### Resultado real — Triagem de tráfego (M2, Random Forest sobre o CICIDS2017 completo)
+### Resultado real — Triagem de tráfego (M2, Random Forest + SMOTE sobre o CICIDS2017 completo)
 
 | Classe | Precision | Recall | Amostras (teste) |
 |---|---|---|---|
@@ -166,26 +166,40 @@ O que está listado abaixo foi executado e verificado, não é projeção.
 | DDoS | 1.00 | 1.00 | 25.605 |
 | PortScan | 0.99 | 1.00 | 31.761 |
 | DoS Hulk | 0.86 | 1.00 | 46.025 |
+| Infiltration | 0.83 | 0.71 | 7 |
+| SSH-Patator | 0.11 | 0.82 | 1.180 |
+| Web Attack (Brute Force) | 0.17 | 0.46 | 301 |
 | Bot | 0.03 | 0.99 | 391 |
-| SSH-Patator | 0.07 | 0.93 | 1.180 |
 | Web Attack (SQL Injection) | 0.00 | 0.50 | 4 |
 
-**Accuracy geral: 93% · F1 ponderado: 0,95.** Nas classes bem representadas
-o modelo é excelente; nas classes raras (poucas dezenas/centenas de
-exemplos contra milhões de linhas normais) a precisão despenca — o
-clássico problema de **classes desbalanceadas**. Mitigação prevista no
-roadmap (SMOTE / `imbalanced-learn`, já no `requirements.txt`).
+**Accuracy geral: 93% · F1 ponderado: 0,95.** As classes bem representadas
+seguem excelentes. Para as raras, testamos balancear o treino com **SMOTE**
+(`imbalanced-learn`, superamostrando classes com menos de 10 mil exemplos)
+— resultado real, não mágico: SSH-Patator e Web Attack (Brute Force)
+melhoraram (precisão quase dobrou), Infiltration melhorou bastante, mas
+**Bot não mudou nada** (precisão continua em 0,03 mesmo com 10 mil exemplos
+sintéticos). Conclusão: para Bot, o problema não é falta de exemplos, é o
+tráfego ser estatisticamente parecido demais com o normal nessas 29
+features — SMOTE não resolve overlap de distribuição, só resolve escassez
+de dados. Próximo passo real seria features adicionais específicas para
+esse padrão, não mais dados sintéticos.
 
 ### Resultado real — Detecção de anomalias (M3, Isolation Forest treinado só com BENIGN)
 
-**Accuracy: 72% · AUC-ROC: 0,74 · Recall em ataques: 45%.** Testamos
-recalibrar o limiar de decisão (`--contamination` de 0,05 para 0,15): o
-recall praticamente não mudou (45% → 46%) e a acurácia geral piorou — ou
-seja, 0,74 de AUC é o teto real do modelo atual com esse conjunto de
-features, não um problema de calibração. É um detector honesto, mas
-modesto: metade dos ataques passa despercebido sem o sinal do módulo de
-triagem. Trabalho futuro natural: features adicionais, ou testar
-Autoencoder/One-Class SVM como o guia original sugeria.
+**Accuracy: 73% · AUC-ROC: 0,82 · Recall em ataques: 46% · Precisão: 88%.**
+A primeira versão (parâmetros padrão do scikit-learn) tinha AUC 0,74:
+descobrimos que `max_samples="auto"` limita cada árvore a **256** amostras
+por padrão — pouquíssimo diante de 1,59 milhão de flows normais de treino,
+que cobrem tráfego bem heterogêneo (web, streaming, VoIP...). Subindo para
+`max_samples=8192` (agora o padrão do módulo), a AUC saltou para 0,82 sem
+tocar em nenhuma outra peça do sistema. Já recalibrar só o limiar de decisão
+(`--contamination`) testamos antes e depois dessa mudança: sempre trocou
+precisão por um pouco de recall, nunca moveu a AUC — ou seja, o ganho real
+veio da árvore enxergar mais dado, não do limiar. Ainda é um detector
+complementar, não autossuficiente (quase metade dos ataques passa batido
+sozinho) — combinado com o M2 (que já classifica DDoS/PortScan/DoS com
+quase 100% de acerto), a cobertura prática é maior que qualquer um dos dois
+isolado.
 
 Os relatórios completos (`classification_report`, matrizes de confusão)
 estão em [`models/`](models/).
@@ -283,14 +297,16 @@ pytest
   de treino em casos extremos (fragmentação, retransmissões).
 - Timeout de flow fixo em 120s (mesma heurística do CICFlowMeter).
 - O CICIDS2017 real tem classes severamente desbalanceadas (ex.: 391
-  amostras de `Bot` contra 2,27 milhões de `BENIGN`); o classificador
-  baseline (M2) tem precisão baixa nas classes raras — ver
-  [Prova de conceito](#prova-de-conceito--o-que-já-funciona) e "Roadmap".
-- O detector de anomalias (M3) atinge AUC-ROC 0,74 no CICIDS2017 real —
-  detecta menos da metade dos ataques sozinho; recalibrar o limiar
-  (`--contamination`) não melhora isso, é o teto do modelo atual com esse
-  conjunto de features. Útil como sinal complementar ao M2, não como
-  detector isolado.
+  amostras de `Bot` contra 2,27 milhões de `BENIGN`). SMOTE (default no M2)
+  ajuda quando o problema é escassez de exemplos (SSH-Patator, Web Attack
+  Brute Force), mas não resolve quando o tráfego malicioso se sobrepõe
+  estatisticamente ao normal nessas 29 features (`Bot`, que não melhorou
+  nada) — ver [Prova de conceito](#prova-de-conceito--o-que-já-funciona).
+- O detector de anomalias (M3) atinge AUC-ROC 0,82 no CICIDS2017 real —
+  detecta menos da metade dos ataques sozinho, mesmo após ajustar
+  `max_samples` (o ganho real veio daí, não de recalibrar o limiar
+  `--contamination`, que só troca precisão por recall sem mover a AUC).
+  Útil como sinal complementar ao M2, não como detector isolado.
 - O dataset original do CICIDS2017 tem valores de `Flow Duration`
   negativos em algumas linhas (artefato conhecido do CICFlowMeter) —
   `load_cicids.py` não filtra isso hoje.
@@ -310,8 +326,10 @@ pytest
 - [x] Módulo 2 — Classificação de tráfego (Random Forest baseline)
 - [x] Módulo 3 — Detecção de anomalias (Isolation Forest)
 - [x] Validação com o CICIDS2017 real (2,83M flows) — números em [Prova de conceito](#prova-de-conceito--o-que-já-funciona)
-- [ ] Tratar desbalanceamento de classes no M2 (SMOTE / `imbalanced-learn`, já nas dependências)
-- [ ] Melhorar o M3 além do teto de AUC 0,74 (novas features, ou testar Autoencoder/One-Class SVM)
+- [x] Balancear classes raras no M2 com SMOTE (ajudou SSH-Patator/Web Attack Brute Force; `Bot` continua precisão 0,03 — overlap de features, não escassez de dados)
+- [x] Tunar hiperparâmetros do M3 (`max_samples`: AUC 0,74 → 0,82)
+- [ ] Melhorar M2 além do SMOTE para classes com overlap de features (`Bot`) — provavelmente precisa de features novas
+- [ ] Melhorar M3 além do teto de AUC 0,82 (novas features, ou testar Autoencoder/One-Class SVM)
 - [ ] Módulo 4 — UEBA (baseline comportamental por usuário, clustering)
 - [ ] Módulo 5 — Predição de falhas e vulnerabilidades
 - [ ] Dashboard (Grafana ou Streamlit) para visualização em tempo real

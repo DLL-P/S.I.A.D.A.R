@@ -11,10 +11,12 @@ from __future__ import annotations
 
 import argparse
 import os
+from collections import Counter
 
 import joblib
 import matplotlib.pyplot as plt
 import seaborn as sns
+from imblearn.over_sampling import SMOTE
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import ConfusionMatrixDisplay, classification_report, confusion_matrix
 from sklearn.model_selection import RandomizedSearchCV, train_test_split
@@ -30,11 +32,33 @@ PARAM_DIST = {
 }
 
 
+def _balance_with_smote(X_train, y_train, target_size: int, random_state: int):
+    """Superamostra (SMOTE) as classes com menos que target_size exemplos --
+    nao mexe nas classes ja bem representadas (evita explodir o tempo de
+    treino tentando igualar tudo a BENIGN, que tem milhoes de linhas)."""
+    class_counts = Counter(y_train)
+    sampling_strategy = {cls: target_size for cls, count in class_counts.items() if count < target_size}
+    if not sampling_strategy:
+        print("Nenhuma classe abaixo do alvo de balanceamento -- SMOTE nao aplicado.")
+        return X_train, y_train
+
+    min_count = min(class_counts[c] for c in sampling_strategy)
+    k_neighbors = max(1, min(5, min_count - 1))
+    print(f"Balanceando {len(sampling_strategy)} classe(s) raras para ~{target_size} "
+          f"amostras cada (SMOTE, k_neighbors={k_neighbors})...")
+    smoter = SMOTE(sampling_strategy=sampling_strategy, k_neighbors=k_neighbors, random_state=random_state)
+    X_train, y_train = smoter.fit_resample(X_train, y_train)
+    print(f"Treino balanceado: {len(y_train)} amostras (antes: {sum(class_counts.values())})")
+    return X_train, y_train
+
+
 def train(
     dataset_path: str,
     model_out: str,
     test_size: float = 0.2,
     do_search: bool = False,
+    balance: bool = True,
+    balance_target: int = 10_000,
     random_state: int = 42,
 ):
     print(f"Carregando dataset de {dataset_path} ...")
@@ -47,6 +71,9 @@ def train(
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=test_size, stratify=y, random_state=random_state
     )
+
+    if balance:
+        X_train, y_train = _balance_with_smote(X_train, y_train, balance_target, random_state)
 
     if do_search:
         print("Rodando RandomizedSearchCV (pode demorar)...")
@@ -109,9 +136,16 @@ def main() -> None:
     parser.add_argument("--model-out", default="models/rf_classifier.joblib")
     parser.add_argument("--test-size", type=float, default=0.2)
     parser.add_argument("--search", action="store_true", help="Rodar RandomizedSearchCV")
+    parser.add_argument("--no-smote", action="store_true",
+                         help="Desativa o balanceamento por SMOTE das classes raras")
+    parser.add_argument("--balance-target", type=int, default=10_000,
+                         help="Classes com menos amostras que isso sao superamostradas ate esse valor (default 10000)")
     args = parser.parse_args()
 
-    train(args.dataset, args.model_out, test_size=args.test_size, do_search=args.search)
+    train(
+        args.dataset, args.model_out, test_size=args.test_size, do_search=args.search,
+        balance=not args.no_smote, balance_target=args.balance_target,
+    )
 
 
 if __name__ == "__main__":
