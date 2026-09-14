@@ -36,7 +36,7 @@ capacidades sob uma mesma arquitetura modular:
 |---|---|---|
 | **M1 — Captura** | Agrega pacotes de rede em *flows* e extrai features padronizadas | ✅ Implementado e testado |
 | **M2 — Triagem** | Classifica o tipo de tráfego (Web, Streaming, VoIP, malicioso...) com Random Forest | ✅ Implementado e testado |
-| **M3 — Anomalia** | Detecção não-supervisionada de comportamento anômalo (Isolation Forest / Autoencoder) | 🕒 Roadmap |
+| **M3 — Anomalia** | Detecção não-supervisionada de comportamento anômalo (Isolation Forest) | ✅ Implementado e testado |
 | **M4 — Perfil (UEBA)** | Baseline comportamental por usuário/host e detecção de desvios | 🕒 Roadmap |
 | **M5 — Previsão** | Antecipação de falhas e vulnerabilidades de rede | 🕒 Roadmap |
 
@@ -119,7 +119,7 @@ flowchart TD
     CORE(("SIADAR"))
     CORE --> M1["M1 · Captura ✅"]
     CORE --> M2["M2 · Triagem ✅"]
-    CORE --> M3["M3 · Anomalia 🕒"]
+    CORE --> M3["M3 · Anomalia ✅"]
     CORE --> M4["M4 · Perfil (UEBA) 🕒"]
     CORE --> M5["M5 · Previsão 🕒"]
     M1 -->|"flows.csv"| M2
@@ -136,6 +136,10 @@ src/siadar/
     preprocess.py          # encoding + StandardScaler
     train.py                # treino do Random Forest (baseline ou com RandomizedSearchCV)
     predict.py              # aplica um modelo treinado a novos flows
+  anomaly/
+    preprocess.py          # StandardScaler (sem encoding de label -- nao-supervisionado)
+    train.py                # treino do Isolation Forest so com trafego BENIGN
+    predict.py              # sinaliza flows anomalos com um modelo treinado
 scripts/eda.py              # análise exploratória do dataset
 tests/                      # testes unitários (pytest)
 docs/                       # material visual: guia de uso e proposta comercial
@@ -155,6 +159,11 @@ O que está listado abaixo foi executado e verificado, não é projeção:
 - **Schema único de 29 features** compartilhado entre o carregador do dataset
   público e o extrator de captura ao vivo — a mesma peça de código garante que
   modelo treinado e tráfego capturado nunca "falem idiomas diferentes".
+- **Detector de anomalias (Isolation Forest)** treinado só com tráfego
+  normal e avaliado contra ataques nunca vistos no treino: no dataset
+  sintético de demonstração, sinaliza corretamente flows de captura real
+  fora da amostra de treino, sem falsos positivos no tráfego normal
+  correspondente — ver [`demo/README.md`](demo/README.md).
 
 **O que é referência de literatura, não resultado próprio ainda:** estudos
 acadêmicos que aplicam Random Forest sobre o CICIDS2017 costumam reportar
@@ -174,9 +183,14 @@ ambiente corporativo é o objetivo explícito da fase de piloto.
 2. **Triagem (M2)** treina um Random Forest sobre o CICIDS2017 (dataset
    público de referência em pesquisa de IDS) para classificar o tipo de
    tráfego de cada flow, e aplica esse modelo a flows capturados ao vivo.
-3. Os módulos 3 a 5 (roadmap) reutilizam a mesma base de features para
-   detecção de anomalias, perfil comportamental de usuários (UEBA) e predição
-   de falhas — ver [Roadmap](#roadmap).
+3. **Anomalia (M3)** treina um Isolation Forest **apenas com tráfego
+   normal (BENIGN)** — nunca vê um ataque durante o treino, simulando o
+   cenário real de produção, onde trafego malicioso rotulado normalmente
+   não está disponível — e sinaliza qualquer flow que fuja desse padrão
+   aprendido.
+4. Os módulos 4 e 5 (roadmap) reutilizam a mesma base de features para
+   perfil comportamental de usuários (UEBA) e predição de falhas — ver
+   [Roadmap](#roadmap).
 
 ## Demo rápida (sem baixar o dataset real)
 
@@ -212,15 +226,25 @@ pip install -e .
    python -m siadar.classification.train data/raw/MachineLearningCVE --model-out models/rf_classifier.joblib --search
    ```
 
-4. **Capturar tráfego real e extrair flows**:
+4. **Treinar o detector de anomalias** (aprende só com os flows `BENIGN` do mesmo dataset):
+   ```bash
+   python -m siadar.anomaly.train data/raw/MachineLearningCVE --model-out models/anomaly_model.joblib
+   ```
+
+5. **Capturar tráfego real e extrair flows**:
    ```bash
    # gerar um .pcap com tcpdump/Wireshark, depois:
    python -m siadar.capture.pcap_to_flows captura.pcap -o flows.csv
    ```
 
-5. **Classificar os flows capturados** com o modelo treinado:
+6. **Classificar os flows capturados** com o modelo treinado:
    ```bash
    python -m siadar.classification.predict models/rf_classifier.joblib flows.csv -o predictions.csv
+   ```
+
+7. **Sinalizar flows anômalos**:
+   ```bash
+   python -m siadar.anomaly.predict models/anomaly_model.joblib flows.csv -o anomalies.csv
    ```
 
 ## Testes
@@ -241,12 +265,21 @@ pytest
 - Timeout de flow fixo em 120s (mesma heurística do CICFlowMeter).
 - Accuracy/F1 de literatura citados neste documento **não** são medições do
   modelo treinado neste repositório — ver [Prova de conceito](#prova-de-conceito--o-que-já-funciona).
+- O detector de anomalias (M3) é **sensível à escala das features**, ao
+  contrário do classificador (M2): durante o desenvolvimento, um dataset de
+  treino com unidades inconsistentes em relação ao extrator de captura real
+  fazia até tráfego normal ser sinalizado como anômalo, mesmo com o
+  classificador funcionando bem sobre os mesmos dados. Por isso o gerador de
+  dados sintéticos (`demo/make_demo_dataset.py`) extrai o treino de tráfego
+  simulado via `pcap_to_flows.py`, em vez de inventar valores de feature —
+  ver [`demo/README.md`](demo/README.md). Ao treinar com o CICIDS2017 real
+  isso não se aplica (é tudo extraído pelo mesmo CICFlowMeter).
 
 ## Roadmap
 
 - [x] Módulo 1 — Captura e pré-processamento (flows a partir de pcap)
 - [x] Módulo 2 — Classificação de tráfego (Random Forest baseline)
-- [ ] Módulo 3 — Detecção de anomalias (Isolation Forest / Autoencoder)
+- [x] Módulo 3 — Detecção de anomalias (Isolation Forest)
 - [ ] Módulo 4 — UEBA (baseline comportamental por usuário, clustering)
 - [ ] Módulo 5 — Predição de falhas e vulnerabilidades
 - [ ] Dashboard (Grafana ou Streamlit) para visualização em tempo real

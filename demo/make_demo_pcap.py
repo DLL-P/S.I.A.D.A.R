@@ -17,28 +17,54 @@ from __future__ import annotations
 import argparse
 import os
 
+import numpy as np
 from scapy.all import IP, TCP, Raw, wrpcap
 
 
-def build_normal_traffic(base_time: float, client="10.0.0.5", server="10.0.0.10", n_flows=5):
+def build_normal_traffic(base_time: float, client="10.0.0.5", server="10.0.0.10", n_flows=5, seed=123):
+    """Simula sessoes HTTPS com handshake TCP e tamanhos de pacote variados
+    -- realismo suficiente para as features extraidas (min/max/std de
+    tamanho de pacote, contagem de SYN, IAT) se parecerem com trafego
+    normal de verdade, nao com um padrao artificialmente uniforme."""
+    rng = np.random.default_rng(seed)
     packets = []
     t = base_time
     for i in range(n_flows):
         cport = 40000 + i
         sport = 443
-        # ida: cliente manda requisicao
-        for j in range(3):
-            pkt = IP(src=client, dst=server) / TCP(sport=cport, dport=sport, flags="PA") / Raw(load=b"GET /" + str(j).encode() * 20)
+
+        # handshake TCP (SYN / SYN-ACK / ACK)
+        for flags, src, dst, sp, dp in [
+            ("S", client, server, cport, sport),
+            ("SA", server, client, sport, cport),
+            ("A", client, server, cport, sport),
+        ]:
+            pkt = IP(src=src, dst=dst) / TCP(sport=sp, dport=dp, flags=flags)
             pkt.time = t
             packets.append(pkt)
-            t += 0.02
-        # volta: servidor responde
-        for j in range(4):
-            pkt = IP(src=server, dst=client) / TCP(sport=sport, dport=cport, flags="PA") / Raw(load=b"HTTP/1.1 200 OK" + b"x" * 300)
+            t += rng.uniform(0.005, 0.02)
+
+        # ida: cliente manda requisicao (tamanho variavel)
+        for _ in range(rng.integers(2, 5)):
+            payload = os.urandom(int(rng.integers(40, 200)))
+            pkt = IP(src=client, dst=server) / TCP(sport=cport, dport=sport, flags="PA") / Raw(load=payload)
             pkt.time = t
             packets.append(pkt)
-            t += 0.015
-        t += 0.5  # intervalo entre "sessoes"
+            t += rng.uniform(0.01, 0.05)
+
+        # volta: servidor responde (tamanho variavel, tipicamente maior)
+        for _ in range(rng.integers(3, 7)):
+            payload = os.urandom(int(rng.integers(200, 900)))
+            pkt = IP(src=server, dst=client) / TCP(sport=sport, dport=cport, flags="PA") / Raw(load=payload)
+            pkt.time = t
+            packets.append(pkt)
+            t += rng.uniform(0.005, 0.03)
+
+        # encerramento
+        pkt = IP(src=client, dst=server) / TCP(sport=cport, dport=sport, flags="FA")
+        pkt.time = t
+        packets.append(pkt)
+        t += rng.uniform(0.3, 0.8)  # intervalo entre "sessoes"
     return packets, t
 
 
@@ -50,6 +76,22 @@ def build_portscan(base_time: float, attacker="10.0.0.99", target="10.0.0.20", n
         pkt.time = t
         packets.append(pkt)
         t += 0.003  # varredura rapida, portas diferentes = flows diferentes
+    return packets, t
+
+
+def build_ddos(base_time: float, attacker="10.0.0.50", target="10.0.0.30", dport=80, n_packets=300, seed=77):
+    """Simula uma inundacao SYN: muitos pacotes do mesmo par origem/destino
+    em rajada, sem resposta -- um unico flow com contagem de pacotes muito
+    alta e trafego quase todo em uma direcao (assinatura classica de DDoS)."""
+    rng = np.random.default_rng(seed)
+    packets = []
+    t = base_time
+    sport = int(rng.integers(20000, 60000))
+    for _ in range(n_packets):
+        pkt = IP(src=attacker, dst=target) / TCP(sport=sport, dport=dport, flags="S")
+        pkt.time = t
+        packets.append(pkt)
+        t += rng.uniform(0.0005, 0.002)  # rajada rapida
     return packets, t
 
 
