@@ -17,6 +17,7 @@
 - [Arquitetura](#arquitetura)
 - [Prova de conceito — o que já funciona](#prova-de-conceito--o-que-já-funciona)
 - [Como o sistema pensa](#como-o-sistema-pensa)
+- [Módulo complementar — verificação de arquivos](#módulo-complementar--verificação-de-arquivos)
 - [Instalação](#instalação)
 - [Uso](#uso)
 - [Testes](#testes)
@@ -140,6 +141,8 @@ src/siadar/
     preprocess.py          # StandardScaler (sem encoding de label -- nao-supervisionado)
     train.py                # treino do Isolation Forest so com trafego BENIGN
     predict.py              # sinaliza flows anomalos com um modelo treinado
+  filescan/
+    scan.py                # modulo complementar: hash/entropia/extensao suspeita em arquivos
 scripts/eda.py              # análise exploratória do dataset
 tests/                      # testes unitários (pytest)
 docs/                       # material visual: guia de uso e proposta comercial
@@ -224,6 +227,35 @@ estão em [`models/`](models/).
 4. Os módulos 4 e 5 (roadmap) reutilizam a mesma base de features para
    perfil comportamental de usuários (UEBA) e predição de falhas — ver
    [Roadmap](#roadmap).
+
+## Módulo complementar — verificação de arquivos
+
+Diferente dos módulos 1-5 (que analisam **tráfego de rede**), `siadar.filescan`
+analisa **arquivos em disco** — um domínio de segurança diferente, mais
+parecido com um antivírus heurístico do que com um IDS. Não depende do
+resto do pipeline.
+
+```bash
+python -m siadar.filescan.scan C:\Users\voce\Downloads -o varredura.csv
+# com uma lista de hashes maliciosos conhecidos:
+python -m siadar.filescan.scan D:\ --hashes hashes_maliciosos.txt --max-files 5000
+```
+
+Sinaliza um arquivo quando encontra:
+
+- **hash conhecido** — SHA-256 bate com uma lista fornecida por você (o
+  projeto não embute nenhuma base de malware);
+- **entropia alta** — heurística clássica para arquivo compactado,
+  criptografado ou empacotado (também dá falso positivo em `.zip`/`.jpg`
+  legítimos — é um sinal, não uma prova);
+- **extensão dupla suspeita** — ex.: `fatura.pdf.exe`;
+- **executável em pasta de risco** — `.exe`/`.scr`/`.js` etc. em
+  Downloads/Temp/Desktop.
+
+**É um triador heurístico, não substitui um antivírus com base de
+assinaturas atualizada.** Falsos positivos e falsos negativos são
+esperados — trate os arquivos sinalizados como ponto de investigação, não
+como veredito. O próprio comando imprime esse aviso quando encontra algo.
 
 ## Demo rápida (sem baixar o dataset real)
 

@@ -14,4 +14,8 @@ models/*.pkl
 .claude/
 outputs/
 demo/output/
+build/
+dist/
+*.spec
+presentation/node_modules/
 
