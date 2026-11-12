@@ -384,6 +384,7 @@ software livre nem open-source.
 
 **Não são permitidos**, sem autorização prévia e por escrito do autor:
 
+- uso ou execução do software, inclusive para avaliação, estudo ou demonstração;
 - cópia, modificação ou redistribuição do código ou da documentação;
 - revenda ou comercialização, total ou parcial, deste software;
 - uso como base para produtos ou serviços derivados.

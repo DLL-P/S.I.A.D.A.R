@@ -1,51 +1,59 @@
-LICENÇA PROPRIETÁRIA — SIADAR
+SIADAR — LICENÇA DE SOFTWARE PROPRIETÁRIO
+
 Copyright (c) 2026 R.D.S. Todos os direitos reservados.
 
-Este repositório e a totalidade do seu conteúdo — incluindo, sem limitação,
-código-fonte, documentação, diagramas, material de proposta comercial e
-quaisquer outros arquivos nele contidos — são de autoria e propriedade
-exclusiva de R.D.S. ("Autor").
+1. TITULARIDADE
+Este repositório e todo o seu conteúdo, incluindo código-fonte, código-objeto,
+documentação, diagramas, metodologia, textos, imagens e quaisquer materiais que
+o acompanhem (o "Material"), são de autoria e propriedade exclusiva de R.D.S.
+(o "Titular"), protegidos pela Lei nº 9.609/1998 (Lei do Software), pela Lei
+nº 9.610/1998 (Direitos Autorais) e pelos tratados internacionais aplicáveis.
 
-1. CONCESSÃO LIMITADA
-   É concedida permissão para visualizar, executar e estudar este software
-   exclusivamente para fins de avaliação, aprendizado pessoal ou demonstração,
-   desde que este aviso de direitos autorais e esta licença sejam mantidos
-   em todas as cópias ou partes substanciais do software.
+2. NENHUMA LICENÇA CONCEDIDA
+Nenhum direito é concedido a terceiros por este repositório. A leitura deste repositório público, no próprio
+GitHub, é permitida apenas para consulta. É
+proibido, sem autorização prévia e por escrito do Titular:
+  a) copiar, reproduzir ou distribuir o Material, no todo ou em parte;
+  b) modificar, adaptar, traduzir ou criar obras derivadas;
+  c) fazer engenharia reversa, descompilar ou desmontar;
+  d) sublicenciar, vender, alugar, emprestar ou disponibilizar a terceiros;
+  e) usar o Material, ou qualquer parte dele, para fins comerciais ou não.
 
-2. RESTRIÇÕES
-   Sem autorização prévia e por escrito do Autor, é expressamente proibido:
-   a) copiar, modificar, distribuir, publicar ou sublicenciar este software
-      ou qualquer parte dele, no todo ou em parte;
-   b) revender, comercializar, alugar ou de qualquer forma disponibilizar
-      este software a terceiros, de forma gratuita ou onerosa;
-   c) utilizar este software, no todo ou em parte, como base para produtos,
-      serviços ou trabalhos derivados, comerciais ou não;
-   d) remover, ocultar ou alterar este aviso de direitos autorais e os
-      termos desta licença.
+3. USO COMERCIAL
+O direito de explorar comercialmente o Material, inclusive por meio de licenças
+de uso pagas, assinaturas ou serviços, pertence exclusivamente ao Titular.
+Licenças de uso para terceiros, quando concedidas, serão objeto de contrato
+próprio e não decorrem deste arquivo.
 
-3. USO COMERCIAL E PARCERIAS
-   Empresas, instituições ou pessoas interessadas em licenciar, adaptar,
-   integrar ou comercializar este software — no todo ou em parte — devem
-   entrar em contato com o Autor para negociação prévia dos termos. Nenhum
-   uso comercial é autorizado sem acordo formal por escrito com o Autor.
+4. ACESSO AO REPOSITÓRIO
+O acesso a este repositório não transfere nenhum direito sobre o Material e
+obriga quem o recebe a respeitar esta licença.
 
-4. ISENÇÃO DE GARANTIAS E LIMITAÇÃO DE RESPONSABILIDADE
-   ESTE SOFTWARE É FORNECIDO "NO ESTADO EM QUE SE ENCONTRA" ("AS IS"), SEM
-   GARANTIAS DE QUALQUER TIPO, EXPRESSAS OU IMPLÍCITAS, INCLUINDO, MAS NÃO
-   SE LIMITANDO A, GARANTIAS DE ADEQUAÇÃO A UM PROPÓSITO ESPECÍFICO OU DE
-   NÃO VIOLAÇÃO. EM NENHUMA HIPÓTESE O AUTOR SERÁ RESPONSÁVEL POR QUALQUER
-   DANO DIRETO, INDIRETO, INCIDENTAL OU CONSEQUENTE DECORRENTE DO USO OU DA
-   IMPOSSIBILIDADE DE USO DESTE SOFTWARE.
+5. COMPONENTES E MARCAS DE TERCEIROS
+Componentes de terceiros eventualmente usados permanecem sob suas próprias
+licenças. Marcas citadas pertencem a seus titulares.
 
-5. VIGÊNCIA
-   Esta licença permanece em vigor enquanto o Autor detiver os direitos
-   sobre o software. O descumprimento de qualquer cláusula aqui prevista
-   extingue automaticamente os direitos concedidos por esta licença.
+6. AUSÊNCIA DE GARANTIA
+O Material é fornecido "no estado em que se encontra", sem garantias de
+qualquer tipo, na máxima extensão permitida pela lei.
 
----
-Este documento estabelece os termos de uso deste repositório e não
-constitui, por si só, aconselhamento jurídico. Para uso comercial ou
-formalização de parcerias, recomenda-se a elaboração de contrato
-específico com apoio jurídico qualificado.
+7. FORO
+Fica eleito o foro da comarca do domicílio do Titular para dirimir quaisquer
+questões relativas a este Material.
+
+---------------------------------------------------------------------------
+
+SIADAR — PROPRIETARY LICENSE (English summary)
+
+Copyright (c) 2026 R.D.S. All rights reserved.
+
+This repository and all of its contents are the exclusive property of R.D.S.
+No license or right is granted. Reading this public repository on GitHub is allowed
+for reference only. Copying, distribution, modification,
+reverse engineering, sublicensing or any use, commercial or not, is prohibited
+without prior written permission from the holder. In case of conflict, the
+Portuguese version above prevails.
+
+---------------------------------------------------------------------------
 
 Contato para licenciamento e parcerias: dellasantacorporativo@gmail.com
